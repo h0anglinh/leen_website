@@ -1,5 +1,28 @@
 <script setup lang="ts">
-const hash = useRoute().hash;
+import type { RouteLocationRaw } from "vue-router";
+
+const contacts = ref<{ icon: string; text: string; href?: string; to?: RouteLocationRaw }[]>([
+  {
+    icon: "fa-solid fa-envelope",
+    text: "E-mail",
+    href: "mailto:linh.hoang@outlook.cz",
+  },
+  {
+    icon: "fa-brands fa-linkedin",
+    text: "LinkedIn",
+    href: "https://www.linkedin.com/in/linh-h0ang/",
+  },
+  {
+    icon: "fa-brands fa-square-facebook",
+    text: "Facebook",
+    href: "https://www.facebook.com/hoang.l1nh",
+  },
+  {
+    text: "Drop a message",
+    icon: "fa-regular fa-face-laugh-wink",
+    to: { name: "send_me_a_message" },
+  },
+]);
 </script>
 
 <template>
@@ -15,31 +38,23 @@ const hash = useRoute().hash;
     </v-row>
     <div class="contacts">
       <v-chip-group>
-        <v-chip
-          label
-          variant="text"
-          prepend-icon="fa-solid fa-envelope"
-          href="mailto:linh.hoang@outlook.cz"
-        >
-          Email
-        </v-chip>
-        <v-chip
-          label
-          variant="text"
-          prepend-icon="fa-brands fa-linkedin"
-          href="https://www.linkedin.com/in/linh-h0ang/"
-          target="_blank"
-        >
-          LinkedIn
-        </v-chip>
-        <v-chip
-          label
-          variant="text"
-          prepend-icon="fa-brands fa-square-facebook"
-          href="https://www.facebook.com/hoang.l1nh"
-        >
-          Facebook
-        </v-chip>
+        <v-hover v-for="contact in contacts">
+          <template v-slot:default="{ isHovering, props }">
+            <v-chip
+              :elevation="isHovering ? 1 : 0"
+              v-bind="props"
+              :key="contact.text"
+              label
+              :variant="isHovering ? 'tonal' : 'text'"
+              :prepend-icon="contact.icon"
+              :href="contact.href"
+              :to="contact.to"
+              :target="contact.href ? '_blank' : undefined"
+            >
+              {{ contact.text }}
+            </v-chip>
+          </template>
+        </v-hover>
       </v-chip-group>
     </div>
   </v-container>

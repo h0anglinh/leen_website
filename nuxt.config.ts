@@ -4,11 +4,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: "LH",
-      link: [
-        { rel: "icon", type: "image/png", href: "@/assets/favicon/favicon-32x32.png" },
-        { rel: "apple-touch-icon", type: "image/png", href: "./assets/favicon/apple-touch-icon.png" },
-        { rel: "author" },
-      ],
+      
     },
   },
   modules: [
@@ -22,6 +18,7 @@ export default defineNuxtConfig({
   supabase: {
     redirect: false,
   },
+  
   vuetify: {
     vuetifyOptions: {
       icons: {
@@ -32,5 +29,8 @@ export default defineNuxtConfig({
   },
   googleFonts: {
     outputDir: "assets/fonts",
+    families: {
+      'DM+Mono': true
+    }
   },
 });
