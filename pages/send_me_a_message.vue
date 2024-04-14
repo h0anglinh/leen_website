@@ -29,12 +29,17 @@ const submit = handleSubmit(async (body) => {
   loading.value = true;
   if (!emailIsValid(body.email ? body.email : "")) {
     setFieldError("email", "enter valid email");
+    loading.value = false;
     return;
   }
   const info = useDeviceInfo();
   const data = await $fetch("/api/message", {
     method: "POST",
-    body: { ...body, client: info.browser, meta: { device: info.device, language: info.language } },
+    body: {
+      ...body,
+      client: info.browser,
+      meta: { device: info.device, language: info.language, doNotTrack: info.doNotTrack },
+    },
   });
   handleReset();
   loading.value = false;
@@ -42,12 +47,6 @@ const submit = handleSubmit(async (body) => {
   setTimeout(() => {
     sent.value = false;
   }, 4000);
-});
-
-onMounted(() => {
-  if (process.client) {
-    console.log(useDeviceInfo());
-  }
 });
 </script>
 
@@ -100,7 +99,7 @@ onMounted(() => {
               v-model="phoneNumber"
               v-bind="phoneNumberProps"
               :error="typeof errors.phone === 'string'"
-              :error-messages="errors.email"
+              :error-messages="errors.phone"
             >
               <template v-slot:loader>
                 <v-progress-linear

@@ -23,6 +23,8 @@ const contacts = ref<{ icon: string; text: string; href?: string; to?: RouteLoca
     to: { name: "send_me_a_message" },
   },
 ]);
+
+const { mobile } = useDisplay();
 </script>
 
 <template>
@@ -34,28 +36,26 @@ const contacts = ref<{ icon: string; text: string; href?: string; to?: RouteLoca
         </Typewriter>
       </v-col>
     </v-row>
-    <div class="contacts">
-      <v-chip-group>
-        <v-hover v-for="contact in contacts">
-          <template v-slot:default="{ isHovering, props }">
-            <v-btn
-              size="small"
-              :elevation="isHovering ? 1 : 0"
-              v-bind="props"
-              :key="contact.text"
-              label
-              :variant="isHovering ? 'tonal' : 'text'"
-              :prepend-icon="contact.icon"
-              :href="contact.href"
-              :to="contact.to"
-              :target="contact.href ? '_blank' : undefined"
-              :color="isHovering ? 'primary' : 'grey'"
-            >
-              {{ contact.text }}
-            </v-btn>
-          </template>
-        </v-hover>
-      </v-chip-group>
+    <div class="contacts d-flex justify-space-between">
+      <v-hover v-for="contact in contacts">
+        <template v-slot:default="{ isHovering, props }">
+          <v-btn
+            size="small"
+            :elevation="isHovering ? 1 : 0"
+            v-bind="props"
+            :key="contact.text"
+            label
+            :variant="isHovering ? 'tonal' : 'text'"
+            :prepend-icon="contact.icon"
+            :href="contact.href"
+            :to="contact.to"
+            :target="contact.href ? '_blank' : undefined"
+            :color="isHovering ? 'primary' : 'grey'"
+          >
+            {{ !mobile || contact.text === "Drop a message" ? contact.text : undefined }}
+          </v-btn>
+        </template>
+      </v-hover>
     </div>
   </v-container>
 </template>

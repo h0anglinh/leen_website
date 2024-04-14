@@ -1,13 +1,13 @@
 type DeviceInfo = {
   browser: string,
   device: string,
-  language: string
-  navigator: Navigator
+  language: string,
+  navigator: Navigator,
+  doNotTrack: string | null
 };
 
 export const useDeviceInfo = () => {
   const ua = navigator.userAgent;
-
   // Detect browser
   const browser = (() => {
       if (/chrome|chromium|crios/i.test(ua)) return 'Chrome';
@@ -30,10 +30,12 @@ export const useDeviceInfo = () => {
       if (/linux/i.test(ua)) return 'Linux';
       return 'UNKNOWN';
   })();
-
+  const DNT = navigator.doNotTrack
   // Get language
   const language = navigator.language || navigator.languages[0] || 'UNKNOWN';
 
-  return { browser, device, language, navigator };
+  
+
+  return { browser, device, language, navigator, doNotTrack: DNT };
 }
 

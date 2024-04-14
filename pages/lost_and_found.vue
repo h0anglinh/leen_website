@@ -35,6 +35,7 @@ const contacts = ref([
     label: "ExxonMobil Czech Republic",
     href: "https://maps.app.goo.gl/nJFTw84ghEUCHkV78",
     icon: "fa-solid fa-location-dot",
+    hide: true,
     meta: {
       tooltip: {
         msg: "Here I work",
@@ -89,7 +90,7 @@ onMounted(() => {
 
         <v-chip-group>
           <v-tooltip
-            v-for="contact in contacts"
+            v-for="contact in contacts.filter((i) => !i.hide)"
             location="top"
             :text="contact.meta?.tooltip.msg"
             :disabled="
