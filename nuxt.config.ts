@@ -4,9 +4,9 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: "LH",
-      
     },
   },
+  
   modules: [
     "@nuxtjs/tailwindcss",
     "@nuxtjs/device",

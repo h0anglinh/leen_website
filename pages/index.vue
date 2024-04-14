@@ -29,18 +29,17 @@ const contacts = ref<{ icon: string; text: string; href?: string; to?: RouteLoca
   <v-container class="h-screen wrapper" fluid>
     <v-row align="center">
       <v-col>
-        <h1>LINH <span>Hoang</span></h1>
-        <h2 class="text-right">
-          developer <br />
-          based in Prague, CZ
-        </h2>
+        <Typewriter :toRotate="['Hi,  my name\'s Linh', 'developer, live in Prague, CZ']" :period="300">
+          Awesome
+        </Typewriter>
       </v-col>
     </v-row>
     <div class="contacts">
       <v-chip-group>
         <v-hover v-for="contact in contacts">
           <template v-slot:default="{ isHovering, props }">
-            <v-chip
+            <v-btn
+              size="small"
               :elevation="isHovering ? 1 : 0"
               v-bind="props"
               :key="contact.text"
@@ -50,9 +49,10 @@ const contacts = ref<{ icon: string; text: string; href?: string; to?: RouteLoca
               :href="contact.href"
               :to="contact.to"
               :target="contact.href ? '_blank' : undefined"
+              :color="isHovering ? 'primary' : 'grey'"
             >
               {{ contact.text }}
-            </v-chip>
+            </v-btn>
           </template>
         </v-hover>
       </v-chip-group>
@@ -61,6 +61,35 @@ const contacts = ref<{ icon: string; text: string; href?: string; to?: RouteLoca
 </template>
 
 <style scoped lang="scss">
+.typewriter h1 {
+  overflow: hidden; /* Ensures the content is not revealed until the animation */
+  border-right: 0.15em solid orange; /* The typwriter cursor */
+  white-space: nowrap; /* Keeps the content on a single line */
+  margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+  letter-spacing: 0.15em; /* Adjust as needed */
+  animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+/* The typing effect */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: orange;
+  }
+}
 .wrapper {
   display: flex;
   align-items: center;
@@ -70,6 +99,7 @@ const contacts = ref<{ icon: string; text: string; href?: string; to?: RouteLoca
   h1 {
     font-size: 5.5em;
     letter-spacing: 0.1em;
+    line-height: 4.5rem;
   }
   h2 {
     font-size: 3em;

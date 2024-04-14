@@ -1,22 +1,16 @@
 <script setup lang="ts">
 import { object, string } from "yup";
+import type { Tables } from "~/typings/database.types";
 const loading = ref(false);
 const sent = ref(false);
-const { defineField, handleSubmit, setFieldError, handleReset, errors, meta, setErrors } = useForm<{
-  name?: string;
-  email: string;
-  message: string;
-}>({
-  validationSchema: object({
-    email: string().required(),
-    name: string(),
-    message: string().required(),
-  }),
-});
+const browser = ref("UNKNOWN");
+const { defineField, handleSubmit, setFieldError, handleReset, errors, meta, setErrors } =
+  useForm<Tables<{ schema: "leen" }, "messages">>();
 
-const [name, nameAttrs] = defineField("name");
 const [email, emailAttrs] = defineField("email");
+const [sender_name, senderNameProps] = defineField("name");
 const [message, messageAttrs] = defineField("message");
+const [phoneNumber, phoneNumberProps] = defineField("phone");
 
 const progress = computed(() => {
   return Math.min(100, (message?.value?.length || 0) * 10);
@@ -33,15 +27,26 @@ function emailIsValid(email: string) {
 
 const submit = handleSubmit(async (body) => {
   loading.value = true;
-  if (!emailIsValid(body.email)) {
+  if (!emailIsValid(body.email ? body.email : "")) {
     setFieldError("email", "enter valid email");
     return;
   }
+  const info = useDeviceInfo();
+  const data = await $fetch("/api/message", {
+    method: "POST",
+    body: { ...body, client: info.browser, meta: { device: info.device, language: info.language } },
+  });
+  handleReset();
+  loading.value = false;
+  sent.value = true;
+  setTimeout(() => {
+    sent.value = false;
+  }, 4000);
+});
 
-  const { error } = await $fetch("/api/messages", { method: "POST", body });
-
-  if (!error) {
-    loading.value = false;
+onMounted(() => {
+  if (process.client) {
+    console.log(useDeviceInfo());
   }
 });
 </script>
@@ -49,23 +54,52 @@ const submit = handleSubmit(async (body) => {
 <template>
   <v-container fluid>
     <div class="flex items-center justify-center h-screen flex-column">
-      <v-card variant="outlined" v-if="sent">
-        <v-card-text>
-          <p class="text-h4 text--primary mb-4">the message has been sent</p>
-          <div class="text--primary">thanks, I will respond as soon as possible</div>
-        </v-card-text>
-      </v-card>
+      <v-alert variant="outlined" v-if="sent">
+        <p class="text-h4 text--primary mb-4">the message has been sent</p>
+        <div class="text--primary">thanks, I will respond as soon as possible</div>
+      </v-alert>
       <v-card class="login-card" variant="outlined" v-else>
         <v-card-title>Send me a message</v-card-title>
         <v-card-text>
           <v-form @submit.prevent="submit">
-            <v-text-field label="Your name" variant="outlined" v-model="name" v-bind="nameAttrs" />
             <v-text-field
-              label="Your email"
+              label="Your name"
+              variant="outlined"
+              v-model="sender_name"
+              v-bind="senderNameProps"
+            >
+              <template v-slot:loader>
+                <v-progress-linear
+                  :active="loading"
+                  height="2"
+                  :color="color"
+                  :model-value="progress"
+                  indeterminate
+                ></v-progress-linear> </template
+            ></v-text-field>
+            <v-text-field
+              label="E-mail"
               variant="outlined"
               v-model="email"
               v-bind="emailAttrs"
               :error="typeof errors.email === 'string'"
+              :error-messages="errors.email"
+            >
+              <template v-slot:loader>
+                <v-progress-linear
+                  :active="loading"
+                  height="2"
+                  :color="color"
+                  :model-value="progress"
+                  indeterminate
+                ></v-progress-linear> </template
+            ></v-text-field>
+            <v-text-field
+              label="Phone number"
+              variant="outlined"
+              v-model="phoneNumber"
+              v-bind="phoneNumberProps"
+              :error="typeof errors.phone === 'string'"
               :error-messages="errors.email"
             >
               <template v-slot:loader>
@@ -84,10 +118,19 @@ const submit = handleSubmit(async (body) => {
               variant="outlined"
               :error="typeof errors.message === 'string'"
               :error-messages="errors.message"
-            />
+            >
+              <template #loader>
+                <v-progress-linear
+                  :active="loading"
+                  height="2"
+                  :color="color"
+                  :model-value="progress"
+                  indeterminate
+                ></v-progress-linear> </template
+            ></v-textarea>
             <div class="d-flex justify-end">
               <v-btn color="black" variant="outlined" type="submit" class="mr-2">Send a message</v-btn>
-              <v-btn variant="text" @click="handleReset">Reset</v-btn>
+              <v-btn variant="text" @click="handleReset">RESET</v-btn>
             </div>
           </v-form>
         </v-card-text>
