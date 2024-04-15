@@ -75,7 +75,7 @@ if (!route.query?.code || !isValid) {
 
           <v-card width="500" class="mb-5">
             <v-card-text>
-              <v-table>
+              <v-table density="compact">
                 <thead>
                   <tr>
                     <th class="text-left">Položka</th>
@@ -108,9 +108,9 @@ if (!route.query?.code || !isValid) {
 
           Platebni údaje pronajímatele: <br />
 
-          <v-card width="400" class="mb-5">
+          <v-card width="500" class="mb-5">
             <v-card-text>
-              <v-table>
+              <v-table density="compact">
                 <tbody>
                   <tr v-for="item in paymentDetails" :key="item.label">
                     <td>{{ item.label }}</td>
