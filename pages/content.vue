@@ -26,24 +26,24 @@ const rent = 27000;
 
 const totalSum = expenses.value.reduce((sum, item) => sum + item.value, 0);
 
-// if (!route.query?.code) {
-//   throw createError({
-//     statusCode: 405,
-//     message: "Access denied",
-//   });
-// }
+if (!route.query?.code) {
+  throw createError({
+    statusCode: 405,
+    message: "Access denied",
+  });
+}
 
-// const encryptedCode = route.query.code as string;
-// const decryptedCode = CryptoJS.AES.decrypt(encryptedCode, encryptKey).toString(CryptoJS.enc.Utf8);
-// const timestamp = parseInt(decryptedCode);
-// isValid.value = new Date().getTime() - timestamp < 300000; // Platnost 5 minut
+const encryptedCode = route.query.code as string;
+const decryptedCode = CryptoJS.AES.decrypt(encryptedCode, encryptKey).toString(CryptoJS.enc.Utf8);
+const timestamp = parseInt(decryptedCode);
+isValid.value = new Date().getTime() - timestamp < 300000; // Platnost 5 minut
 
-// if (!route.query?.code || !isValid) {
-//   throw createError({
-//     statusCode: 405,
-//     message: "Access denied",
-//   });
-// }
+if (!route.query?.code || !isValid) {
+  throw createError({
+    statusCode: 405,
+    message: "Access denied",
+  });
+}
 </script>
 
 <template>
