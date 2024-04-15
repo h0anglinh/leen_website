@@ -73,7 +73,7 @@ const totalSum = expenses.value.reduce((sum, item) => sum + item.value, 0);
             Měsíční podnájemné a zálohy Měsíční podnájemné činí <b>{{ rent }} CZK</b>.
           </p>
 
-          <v-card width="500">
+          <v-card width="500" class="mb-5">
             <v-card-text>
               <v-table>
                 <thead>
@@ -106,9 +106,9 @@ const totalSum = expenses.value.reduce((sum, item) => sum + item.value, 0);
             být provedena nejpozději <strong>25.4.2024</strong>.
           </p>
 
-          Platebni údaje majitele: <br />
+          Platebni údaje pronajímatele: <br />
 
-          <v-card width="400">
+          <v-card width="400" class="mb-5">
             <v-card-text>
               <v-table>
                 <tbody>
@@ -128,7 +128,11 @@ const totalSum = expenses.value.reduce((sum, item) => sum + item.value, 0);
           <p>Kauce Nájemce se zavazuje zaplatit kauci ve výši <b>25,000 CZK.</b></p>
 
           <h3 class="text-h4">Článek 4: Sankce</h3>
-          <p>V případě zpoždění s platbou, nájemce zaplatí penalizaci ve výši 10% z dlužné částky.</p>
+          <p>
+            V případě zpoždění s platbou, nájemce zaplatí penalizaci ve výši 10% z dlužné částky.
+            <br />Pokud nájemné nebude uhrazeno po dobu dvou měsíců, pronajímatel má právo okamžitě
+            vypovědět smlouvu a omezit nájemci přístup do bytu.
+          </p>
           <h3 class="text-h4">Článek 5: Prodloužení smlouvy</h3>
 
           <p>

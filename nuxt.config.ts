@@ -3,7 +3,17 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   app: {
     head: {
-      title: "LH",
+      meta: [
+        { charset: "utf-8" },
+        { hid: 'robots', name: 'robots', content: 'noindex, nofollow' },
+        { name: 'author', content: 'Linh Hoang' },
+        { "http-equiv":"refresh", content: '3600' },
+        { property: 'og:title', content: 'Linh Hoang | Software Developer' },
+        { property: 'og:description', content: 'I create exciting and fun things, and I cook delicious Pho :)' },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:site_name', content: 'Linh Hoang' },
+        { property: 'og:url', content: 'https://linhhoang.eu' }
+      ]
     },
   },
   

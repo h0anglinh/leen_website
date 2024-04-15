@@ -33,7 +33,6 @@ async function handleLogin() {
     method: "POST",
     body: { correct_pass: passed, meta: deviceInfo },
   });
-  console.log({ data });
 
   if (passed) {
     const timestamp = new Date().getTime();
