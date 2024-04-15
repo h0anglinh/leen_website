@@ -23,3 +23,4 @@ export type Enums<
   SchemaName extends keyof Database,
   EnumName extends keyof Database[SchemaName]["Enums"]
 > = Database[SchemaName]["Enums"][EnumName];
+

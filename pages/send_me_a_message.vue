@@ -67,7 +67,7 @@ const submit = handleSubmit(async (body) => {
               v-model="sender_name"
               v-bind="senderNameProps"
             >
-              <template v-slot:loader>
+              <template #loader>
                 <v-progress-linear
                   :active="loading"
                   height="2"
@@ -84,7 +84,7 @@ const submit = handleSubmit(async (body) => {
               :error="typeof errors.email === 'string'"
               :error-messages="errors.email"
             >
-              <template v-slot:loader>
+              <template #loader>
                 <v-progress-linear
                   :active="loading"
                   height="2"

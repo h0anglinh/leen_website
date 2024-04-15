@@ -31,7 +31,7 @@ const tick = () => {
   } else if (isDeleting.value && currentText.value === "") {
     isDeleting.value = false;
     loopNum.value++;
-    delta = 500;
+    delta = 300;
   }
 
   if (loopNum.value >= props.toRotate.length && !isDeleting.value) {
@@ -49,8 +49,14 @@ onMounted(() => {
 
 <template>
   <div class="typewrite">
-    <span class="wrap">{{ currentText }}</span>
+    <h3 class="wrap text-h3">{{ currentText }}</h3>
     <!-- Slot pro obsah zobrazený na konci -->
     <slot v-if="finished"></slot>
   </div>
 </template>
+
+<style scoped>
+.wrap {
+  transition: 1000ms;
+}
+</style>

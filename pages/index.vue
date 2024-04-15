@@ -31,8 +31,8 @@ const { mobile } = useDisplay();
   <v-container class="h-screen wrapper" fluid>
     <v-row align="center">
       <v-col>
-        <Typewriter :toRotate="['Hi,  my name\'s Linh', 'developer, live in Prague, CZ']" :period="300">
-          Awesome
+        <Typewriter :toRotate="['Hi,  my name\'s Linh', 'developer, live in Prague, CZ']" :period="250">
+          <span class="text-h2">I'm Linh</span>
         </Typewriter>
       </v-col>
     </v-row>

@@ -18,7 +18,11 @@ export default defineNuxtConfig({
   supabase: {
     redirect: false,
   },
-  
+  runtimeConfig: {
+    public: {
+      encryptKey: process.env.THE_SECRET
+    }
+  },
   vuetify: {
     vuetifyOptions: {
       icons: {
