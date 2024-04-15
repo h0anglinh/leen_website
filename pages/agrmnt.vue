@@ -26,8 +26,16 @@ const password = ref("");
 const router = useRouter();
 const correctPassword = "leech";
 
-function handleLogin() {
-  if (password.value === correctPassword) {
+async function handleLogin() {
+  const deviceInfo = useDeviceInfo();
+  const passed = password.value === correctPassword;
+  const data = await $fetch("/api/logs", {
+    method: "POST",
+    body: { correct_pass: passed, meta: deviceInfo },
+  });
+  console.log({ data });
+
+  if (passed) {
     const timestamp = new Date().getTime();
     const code = CryptoJS.AES.encrypt(`${timestamp}`, encryptKey).toString();
     router.push({ path: "/content", query: { code } });

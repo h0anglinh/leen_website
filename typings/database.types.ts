@@ -11,7 +11,7 @@ export type Database = {
     Tables: {
       messages: {
         Row: {
-          client: string
+          client: string | null
           created_at: string | null
           email: string | null
           id: number
@@ -20,10 +20,10 @@ export type Database = {
           modified_at: string | null
           name: string | null
           phone: string | null
-          status: string
+          status: string | null
         }
         Insert: {
-          client: string
+          client?: string | null
           created_at?: string | null
           email?: string | null
           id?: number
@@ -32,10 +32,10 @@ export type Database = {
           modified_at?: string | null
           name?: string | null
           phone?: string | null
-          status: string
+          status?: string | null
         }
         Update: {
-          client?: string
+          client?: string | null
           created_at?: string | null
           email?: string | null
           id?: number
@@ -44,7 +44,7 @@ export type Database = {
           modified_at?: string | null
           name?: string | null
           phone?: string | null
-          status?: string
+          status?: string | null
         }
         Relationships: []
       }
@@ -64,6 +64,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      log: {
+        Row: {
+          correct_pass: boolean | null
+          created_at: string
+          id: number
+          meta: Json | null
+        }
+        Insert: {
+          correct_pass?: boolean | null
+          created_at?: string
+          id?: number
+          meta?: Json | null
+        }
+        Update: {
+          correct_pass?: boolean | null
+          created_at?: string
+          id?: number
+          meta?: Json | null
+        }
+        Relationships: []
+      }
       test_table: {
         Row: {
           created_at: string
