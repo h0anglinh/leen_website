@@ -148,12 +148,12 @@ if (!route.query?.code || !isValid) {
             podmínkami.
           </p>
 
-          <h3 class="text-h4">Článek 7: Potvrzení a souhlas</h3>
+          <h3 class="text-h4">Článek 6: Potvrzení a souhlas</h3>
           <p>
             Souhlas s těmito podmínkami nájemce vyjádří uhrazením první zálohy do 25.4.2024, což bude
             považováno za přijetí těchto podmínek.
           </p>
-          <h3 class="text-h4">Článek 8: Výpovědní lhůta a vyklizení bytu</h3>
+          <h3 class="text-h4">Článek 7: Výpovědní lhůta a vyklizení bytu</h3>
           <p>
             Výpovědní lhůta této smlouvy je jeden měsíc, který začíná běžet dnem doručení písemného
             oznámení výpovědi druhé straně. Nájemce je povinen byt vyklidit nejpozději do posledního dne
