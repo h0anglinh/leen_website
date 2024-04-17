@@ -3,13 +3,16 @@
     <v-row justify="center" align="center" class="h-screen">
       <v-col cols="12" sm="6" md="4">
         <v-card>
-          <v-card-title> Enter password </v-card-title>
-          <v-card-text>
-            <v-form @submit.prevent="handleLogin">
+          <v-form @submit.prevent="handleLogin">
+            <v-card-title class="text-center"> Enter password </v-card-title>
+            <v-card-text>
               <v-text-field v-model="password" label="Password" type="password"></v-text-field>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
               <v-btn color="primary" type="submit">SUBMIT</v-btn>
-            </v-form>
-          </v-card-text>
+            </v-card-actions>
+          </v-form>
         </v-card>
       </v-col>
     </v-row>

@@ -4,7 +4,7 @@ import CryptoJS from "crypto-js";
 const encryptKey = useRuntimeConfig().public.encryptKey;
 const route = useRoute();
 
-const isValid = ref(true);
+const isValid = ref(false);
 
 const expenses = ref([
   { label: "Plyn", value: 862 },
@@ -29,7 +29,7 @@ const totalSum = expenses.value.reduce((sum, item) => sum + item.value, 0);
 
 if (!route.query?.code) {
   throw createError({
-    statusCode: 405,
+    statusCode: 401,
     message: "Access denied",
   });
 }
@@ -41,15 +41,20 @@ isValid.value = new Date().getTime() - timestamp < 300000; // Platnost 5 minut
 
 if (!route.query?.code || !isValid) {
   throw createError({
-    statusCode: 405,
+    statusCode: 401,
     message: "Access denied",
   });
 }
 </script>
-
 <template>
   <v-container>
-    <div v-if="!isValid">Odkaz je neplatný nebo vypršel.</div>
+    <v-row justify="center" align="center" class="h-screen" v-if="!isValid">
+      <v-col cols="12" sm="6" md="6">
+        <v-alert icon="fa-solid fa-circle-exclamation">
+          Heslo je neplatné nebo relace již vypršela
+        </v-alert></v-col
+      >
+    </v-row>
     <div v-else>
       <v-container>
         <v-sheet width="1100" class="pa-6 mx-auto" elevation="1">
