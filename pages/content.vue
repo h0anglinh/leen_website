@@ -22,7 +22,8 @@ const paymentDetails = ref([
   { label: "BIC/SWIFT", value: "FIOBCZPPXXX" },
 ]);
 
-const rent = 27000;
+const rent = 24000;
+const discount = 0.4;
 
 const totalSum = expenses.value.reduce((sum, item) => sum + item.value, 0);
 
@@ -100,10 +101,11 @@ if (!route.query?.code || !isValid) {
 
           <p class="text-body-1">
             Pokud tato smlouva přejde v platnost je nájemci poskytnuta jednorazová sleva na nájemné,
-            která činí 50% z ceny nájemného. (Nájemné do 31.12.2024 činí {{ rent / 2 }}CZK). Celkově
-            nájemce uhradí měsíčně {{ rent / 2 + totalSum }} CZK. Platnost a sleva Tato smlouva je platná
-            do 31.12.2024. Částky jsou splatné nejpozději do 25. dne v měsíci. První platba za nájem musí
-            být provedena nejpozději <strong>25.4.2024</strong>.
+            která činí {{ discount * 100 }}% z ceny nájemného. (Nájemné do 31.12.2024 činí
+            {{ rent - rent * discount }}CZK). Celkově nájemce uhradí
+            <strong>měsíčně {{ rent - rent * discount + totalSum }} CZK</strong>. Platnost a sleva Tato
+            smlouva je platná do 31.12.2024. Částky jsou splatné nejpozději do 25. dne v měsíci. První
+            platba za nájem musí být provedena nejpozději <strong>25.4.2024</strong>.
           </p>
 
           Platebni údaje pronajímatele: <br />

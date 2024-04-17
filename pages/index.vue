@@ -117,7 +117,6 @@ const { mobile } = useDisplay();
     font-size: 5.5em;
     letter-spacing: 1.2rem !important;
     @media (max-width: 768px) {
-      // 768px je často používaná šířka pro rozlišení mezi mobilním a desktop zobrazením
       font-size: 1.3em;
       letter-spacing: 1rem !important; // Menší velikost fontu pro mobilní zařízení
     }
