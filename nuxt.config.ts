@@ -25,6 +25,7 @@ export default defineNuxtConfig({
     "@nuxtjs/supabase",
     "vuetify-nuxt-module",
   ],
+  
   supabase: {
     redirect: false,
   },

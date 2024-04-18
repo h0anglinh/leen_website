@@ -6,12 +6,14 @@ const route = useRoute();
 
 const isValid = ref(false);
 
+const persons = 2;
+
 const expenses = ref([
-  { label: "Plyn", value: 862 },
-  { label: "Elektřina", value: 1921 },
-  { label: "Vodné / stočné", value: 800 },
-  { label: "Úklid", value: 174 },
-  { label: "Popelnice", value: 174 },
+  { label: "Plyn", value: Math.round(962 * (persons * 0.7)) },
+  { label: "Elektřina", value: Math.round(1921 * (persons * 0.6)) },
+  { label: "Vodné / stočné", value: 800 * (persons * 0.6) },
+  { label: "Úklid", value: 174 * persons },
+  { label: "Popelnice", value: 174 * persons },
   { label: "Společná elektřina", value: 180 },
   { label: "Užívání telefonního čísla 607629072", value: 250 },
 ]);
@@ -27,7 +29,7 @@ const discount = 0.4;
 
 const totalSum = expenses.value.reduce((sum, item) => sum + item.value, 0);
 
-if (!route.query?.code) {
+if (!route.query?.code && process.env.NODE_ENV === "production") {
   throw createError({
     statusCode: 401,
     message: "Access denied",
@@ -39,7 +41,7 @@ const decryptedCode = CryptoJS.AES.decrypt(encryptedCode, encryptKey).toString(C
 const timestamp = parseInt(decryptedCode);
 isValid.value = new Date().getTime() - timestamp < 300000; // Platnost 5 minut
 
-if (!route.query?.code || !isValid) {
+if ((!route.query?.code || !isValid) && process.env.NODE_ENV === "production") {
   throw createError({
     statusCode: 401,
     message: "Access denied",
@@ -63,13 +65,13 @@ if (!route.query?.code || !isValid) {
           <p class="text-body-1">
             Tento dokument slouží jako podnájemní smlouva mezi Linh Hoang, dále jen "pronajímatel",
             <br />
-            a Nam Hoang, dále jen "nájemce", <br />
+            a Nam Hoang a Tomáš Hoang dále jen "nájemci", <br />
             k podnájmu nemovitosti nacházející se na adrese Suchý vršek 2118/8 byt č.2, dále jen "byt".
           </p>
 
           <h3 class="text-h4">Článek 1: Předmět podnájmu</h3>
           <p>
-            Předmět podnájmu Pronajímatel se zavazuje poskytnout nájemci do podnájmu nemovitost, která
+            Předmět podnájmu Pronajímatel se zavazuje poskytnout nájemcům do podnájmu nemovitost, která
             zahrnuje 3 pokoje (2 ložnice a obývací pokoj), kuchyni, koupelnu, toaletu, balkon a sklep. V
             byte se nachází jeden další pokoj, jehož přístup je nájemci zakázán.
           </p>
@@ -105,7 +107,7 @@ if (!route.query?.code || !isValid) {
           </v-card>
 
           <p class="text-body-1">
-            Pokud tato smlouva přejde v platnost je nájemci poskytnuta jednorazová sleva na nájemné,
+            Pokud tato smlouva přejde v platnost je nájemcům poskytnuta jednorazová sleva na nájemné,
             která činí {{ discount * 100 }}% z ceny nájemného. (Nájemné do 31.12.2024 činí
             {{ rent - rent * discount }}CZK). Celkově nájemce uhradí
             <strong>měsíčně {{ rent - rent * discount + totalSum }} CZK</strong>. Platnost a sleva Tato
@@ -132,7 +134,7 @@ if (!route.query?.code || !isValid) {
 
           <h3 class="text-h4">Článek 3: Kauce</h3>
 
-          <p>Kauce Nájemce se zavazuje zaplatit kauci ve výši <b>25,000 CZK.</b></p>
+          <p>Kauce Nájemci se zavazují zaplatit kauci ve výši <b>25,000 CZK.</b></p>
 
           <h3 class="text-h4">Článek 4: Sankce</h3>
           <p>
@@ -150,16 +152,16 @@ if (!route.query?.code || !isValid) {
 
           <h3 class="text-h4">Článek 6: Potvrzení a souhlas</h3>
           <p>
-            Souhlas s těmito podmínkami nájemce vyjádří uhrazením první zálohy do 25.4.2024, což bude
+            Souhlas s těmito podmínkami nájemci vyjádří uhrazením první zálohy do 25.4.2024, což bude
             považováno za přijetí těchto podmínek.
           </p>
           <h3 class="text-h4">Článek 7: Výpovědní lhůta a vyklizení bytu</h3>
           <p>
             Výpovědní lhůta této smlouvy je jeden měsíc, který začíná běžet dnem doručení písemného
-            oznámení výpovědi druhé straně. Nájemce je povinen byt vyklidit nejpozději do posledního dne
-            platnosti nájemní smlouvy. V případě, že nájemce byt nevyklidí v stanoveném termínu,
+            oznámení výpovědi druhé straně. Nájemci jsou povinni byt vyklidit nejpozději do posledního
+            dne platnosti nájemní smlouvy. V případě, že nájemci byt nevyklidí v stanoveném termínu,
             pronajímatel má právo využít služby úklidové společnosti k vyklizení bytu. Náklady spojené s
-            vyklizením bytu úklidovou službou budou následně fakturovány nájemci. Nájemce se zavazuje
+            vyklizením bytu úklidovou službou budou následně fakturovány nájemcům. Nájemci se zavazují
             tyto náklady uhradit v plné výši.
           </p>
         </v-sheet>
