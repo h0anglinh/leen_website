@@ -4,16 +4,16 @@ import CryptoJS from "crypto-js";
 const encryptKey = useRuntimeConfig().public.encryptKey;
 const route = useRoute();
 
-const isValid = ref(false);
+const isValid = ref(true);
 
 const persons = 2;
 
 const expenses = ref([
-  { label: "Plyn", value: Math.round(962 * (persons * 0.7)) },
-  { label: "Elektřina", value: Math.round(1921 * (persons * 0.6)) },
-  { label: "Vodné / stočné", value: 800 * (persons * 0.6) },
-  { label: "Úklid", value: 174 * persons },
-  { label: "Popelnice", value: 174 * persons },
+  { label: "Plyn", value: Math.round(962) },
+  { label: "Elektřina", value: Math.round(1921) },
+  { label: "Vodné / stočné", value: 800 },
+  { label: "Úklid", value: 174 },
+  { label: "Popelnice", value: 174 },
   { label: "Společná elektřina", value: 180 },
   { label: "Užívání telefonního čísla 607629072", value: 250 },
 ]);
@@ -29,24 +29,24 @@ const discount = 0.4;
 
 const totalSum = expenses.value.reduce((sum, item) => sum + item.value, 0);
 
-if (!route.query?.code && process.env.NODE_ENV === "production") {
-  throw createError({
-    statusCode: 401,
-    message: "Access denied",
-  });
-}
+// if (!route.query?.code && process.env.NODE_ENV === "production") {
+//   throw createError({
+//     statusCode: 401,
+//     message: "Access denied",
+//   });
+// }
 
-const encryptedCode = route.query.code as string;
-const decryptedCode = CryptoJS.AES.decrypt(encryptedCode, encryptKey).toString(CryptoJS.enc.Utf8);
-const timestamp = parseInt(decryptedCode);
-isValid.value = new Date().getTime() - timestamp < 300000; // Platnost 5 minut
+// const encryptedCode = route.query.code as string;
+// const decryptedCode = CryptoJS.AES.decrypt(encryptedCode, encryptKey).toString(CryptoJS.enc.Utf8);
+// const timestamp = parseInt(decryptedCode);
+// isValid.value = new Date().getTime() - timestamp < 300000; // Platnost 5 minut
 
-if ((!route.query?.code || !isValid) && process.env.NODE_ENV === "production") {
-  throw createError({
-    statusCode: 401,
-    message: "Access denied",
-  });
-}
+// if ((!route.query?.code || !isValid) && process.env.NODE_ENV === "production") {
+//   throw createError({
+//     statusCode: 401,
+//     message: "Access denied",
+//   });
+// }
 </script>
 <template>
   <v-container>
