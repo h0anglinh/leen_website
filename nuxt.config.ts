@@ -31,7 +31,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      encryptKey: process.env.THE_SECRET
+      encryptKey: process.env.THE_SECRET,
+      toet_pass: process.env.TOET_PASSWORD
     }
   },
   vuetify: {
