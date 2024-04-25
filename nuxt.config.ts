@@ -30,6 +30,7 @@ export default defineNuxtConfig({
     redirect: false,
   },
   runtimeConfig: {
+    mode: process.env.NODE_ENV,
     public: {
       encryptKey: process.env.THE_SECRET,
       toet_pass: process.env.TOET_PASSWORD

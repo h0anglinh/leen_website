@@ -8,7 +8,6 @@ useHead({
   title: headTitle,
   meta: [{ property: "og:title", content: `${headTitle} | LH` }],
 });
-
 const password = ref("");
 const user = ref("");
 const router = useRouter();
@@ -47,6 +46,8 @@ async function handleLogin() {
     alert("Incorrect user / password");
   }
 }
+
+const mode = process.env.NODE_ENV;
 </script>
 
 <template>
@@ -55,7 +56,7 @@ async function handleLogin() {
       <v-col cols="12" sm="6" md="4">
         <v-card>
           <v-form @submit.prevent="handleLogin">
-            <v-card-title class="text-center"> Enter password </v-card-title>
+            <v-card-title class="text-center"> Enter password {{ mode }}</v-card-title>
             <v-card-text>
               <v-text-field v-model="user" label="User" type="text"></v-text-field>
               <v-text-field v-model="password" label="Password" type="password"></v-text-field>
