@@ -17,9 +17,10 @@ import type {
      const auth = useSupabaseClient().auth;
    
      if (type === "oauth" && typeof param === "string") {
+      const baseURL = window.location.origin
 
-      const path = `http://localhost:3000/callback?redirect=${redirect || "/"}`
-
+      const path = `${baseURL}/callback?redirect=${redirect || "/"}`
+      
       
        const { data } = await auth.signInWithOAuth({
          provider: param,
