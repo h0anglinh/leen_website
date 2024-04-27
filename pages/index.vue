@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { RouteLocationRaw } from "vue-router";
 
+const user = useSupabaseUser();
+
 const contacts = ref<{ icon: string; text: string; href?: string; to?: RouteLocationRaw }[]>([
   {
     icon: "fa-solid fa-envelope",
@@ -29,8 +31,11 @@ const { mobile } = useDisplay();
 
 <template>
   <v-container class="h-screen wrapper" fluid>
+    <div class="d-flex" v-if="user">
+      <v-card elevation="0" variant="outlined"><v-card-title>Dien thoai</v-card-title></v-card>
+    </div>
     <v-row align="center">
-      <v-col>
+      <v-col cols="12">
         <Typewriter :toRotate="['Hi,  my name\'s Linh', 'developer, live in Prague, CZ']" :period="250">
           <span class="text-h2">I'm Linh</span>
         </Typewriter>

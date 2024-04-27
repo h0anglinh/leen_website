@@ -7,6 +7,85 @@ export type Json =
   | Json[]
 
 export type Database = {
+  finance: {
+    Tables: {
+      payments: {
+        Row: {
+          amount: number
+          constant_symbol: string | null
+          created_at: string | null
+          currency: string | null
+          description: string | null
+          id: number
+          message_for_receiver: string | null
+          meta: Json | null
+          receiver_account: string | null
+          sender_account: string | null
+          sender_bank_code: string | null
+          sender_bank_name: string | null
+          sender_name: string
+          transaction_date: string
+          transaction_id: number | null
+          transaction_type: string | null
+          user_name: string | null
+          variable_symbol: string | null
+        }
+        Insert: {
+          amount: number
+          constant_symbol?: string | null
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          id?: number
+          message_for_receiver?: string | null
+          meta?: Json | null
+          receiver_account?: string | null
+          sender_account?: string | null
+          sender_bank_code?: string | null
+          sender_bank_name?: string | null
+          sender_name: string
+          transaction_date: string
+          transaction_id?: number | null
+          transaction_type?: string | null
+          user_name?: string | null
+          variable_symbol?: string | null
+        }
+        Update: {
+          amount?: number
+          constant_symbol?: string | null
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          id?: number
+          message_for_receiver?: string | null
+          meta?: Json | null
+          receiver_account?: string | null
+          sender_account?: string | null
+          sender_bank_code?: string | null
+          sender_bank_name?: string | null
+          sender_name?: string
+          transaction_date?: string
+          transaction_id?: number | null
+          transaction_type?: string | null
+          user_name?: string | null
+          variable_symbol?: string | null
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   leen: {
     Tables: {
       messages: {
@@ -94,6 +173,7 @@ export type Database = {
           group_name: string | null
           month: number
           phone_number: string | null
+          type: string | null
           year: number
         }
         Insert: {
@@ -104,6 +184,7 @@ export type Database = {
           group_name?: string | null
           month: number
           phone_number?: string | null
+          type?: string | null
           year: number
         }
         Update: {
@@ -114,6 +195,7 @@ export type Database = {
           group_name?: string | null
           month?: number
           phone_number?: string | null
+          type?: string | null
           year?: number
         }
         Relationships: [
@@ -425,6 +507,66 @@ export type Database = {
       }
     }
     Views: {
+      group_expenses_summary: {
+        Row: {
+          group_name: string | null
+          month: number | null
+          total_amount: number | null
+          unique_phone_count: number | null
+          year: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expenses_group_name_fkey"
+            columns: ["group_name"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["name"]
+          },
+          {
+            foreignKeyName: "expenses_group_name_fkey"
+            columns: ["group_name"]
+            isOneToOne: false
+            referencedRelation: "vw_invoice_items"
+            referencedColumns: ["group_name"]
+          },
+          {
+            foreignKeyName: "expenses_group_name_fkey"
+            columns: ["group_name"]
+            isOneToOne: false
+            referencedRelation: "vw_invoice_items_2"
+            referencedColumns: ["group_name"]
+          },
+          {
+            foreignKeyName: "expenses_group_name_fkey"
+            columns: ["group_name"]
+            isOneToOne: false
+            referencedRelation: "vw_phone_user_group"
+            referencedColumns: ["group_name"]
+          },
+        ]
+      }
+      payment_view: {
+        Row: {
+          amount: number | null
+          combined_names: string | null
+          created_at: string | null
+          transaction_date: string | null
+        }
+        Insert: {
+          amount?: number | null
+          combined_names?: never
+          created_at?: string | null
+          transaction_date?: string | null
+        }
+        Update: {
+          amount?: number | null
+          combined_names?: never
+          created_at?: string | null
+          transaction_date?: string | null
+        }
+        Relationships: []
+      }
       vw_invoice_items: {
         Row: {
           amount: number | null
@@ -511,6 +653,32 @@ export type Database = {
         }
         Relationships: []
       }
+      vw_profit_per_phone: {
+        Row: {
+          expenses: number | null
+          month: number | null
+          phone_number: string | null
+          profit: number | null
+          revenue: number | null
+          year: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoice_items_phone_number_fkey"
+            columns: ["phone_number"]
+            isOneToOne: false
+            referencedRelation: "phone_numbers"
+            referencedColumns: ["phone_number"]
+          },
+          {
+            foreignKeyName: "invoice_items_phone_number_fkey"
+            columns: ["phone_number"]
+            isOneToOne: false
+            referencedRelation: "vw_phone_user_group"
+            referencedColumns: ["phone_number"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never
@@ -530,6 +698,7 @@ export type Database = {
           created_at: string
           id: number
           meta: Json | null
+          MODE: string | null
           user: string | null
         }
         Insert: {
@@ -537,6 +706,7 @@ export type Database = {
           created_at?: string
           id?: number
           meta?: Json | null
+          MODE?: string | null
           user?: string | null
         }
         Update: {
@@ -544,6 +714,7 @@ export type Database = {
           created_at?: string
           id?: number
           meta?: Json | null
+          MODE?: string | null
           user?: string | null
         }
         Relationships: []

@@ -8,10 +8,11 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "supa": "supabase gen types typescript --project-id edtddirftcbsoqrklufd --schema public,leen,mobile_services  > typings/database.types.ts"
+    "supa": "supabase gen types typescript --project-id edtddirftcbsoqrklufd --schema public,leen,mobile_services,finance  > typings/database.types.ts"
   },
   "dependencies": {
     "nuxt": "^3.10.1",
+    "vee-validate": "^4.12.6",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5"
   },

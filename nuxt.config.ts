@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import supabase from "./supabase.config";
 export default defineNuxtConfig({
   devtools: { enabled: true },
   app: {
@@ -17,6 +18,7 @@ export default defineNuxtConfig({
     },
   },
   
+  
   modules: [
     "@nuxtjs/tailwindcss",
     "@nuxtjs/device",
@@ -25,15 +27,15 @@ export default defineNuxtConfig({
     "@nuxtjs/supabase",
     "vuetify-nuxt-module",
   ],
+
   
-  supabase: {
-    redirect: false,
-  },
+  supabase,
   runtimeConfig: {
     mode: process.env.NODE_ENV,
     public: {
       encryptKey: process.env.THE_SECRET,
-      toet_pass: process.env.TOET_PASSWORD
+      toet_pass: process.env.TOET_PASSWORD,
+      nepal_pass: process.env.NEPAL_PASSWORD
     }
   },
   vuetify: {

@@ -10,7 +10,7 @@ export default eventHandler(async (event) => {
   const instance = client.from('expenses').select("*");
 
   if(groupName && typeof groupName === 'string') {
-     const {data, error} = await instance.eq('group_name', groupName).order('year', {ascending: false}).order('month', {ascending: false}).limit(30)
+     const {data, error} = await instance.eq('group_name', groupName).neq('type', 'mobile_service').order('year', {ascending: false}).order('month', {ascending: false})
      if(error){
           throw createError({
             statusCode: Number(error.code),
@@ -20,7 +20,7 @@ export default eventHandler(async (event) => {
      return data
   }
 
-  const { data, error } = await instance;
+  const { data, error } = await instance
   if(error){
     throw createError({
       statusCode: Number(error.code),
