@@ -54,12 +54,19 @@ const totalSum = expenses.value.reduce((sum, item) => sum + item.value, 0);
     <v-row justify="center" align="center" class="h-screen" v-if="!isValid">
       <v-col cols="12" sm="6" md="6">
         <v-alert icon="fa-solid fa-circle-exclamation">
-          Heslo je neplatné nebo relace již vypršela
+          The password is invalid or the session has expired
         </v-alert></v-col
       >
     </v-row>
     <div v-else>
-      <v-container>
+      <v-row justify="center" align="center" class="h-screen">
+        <v-col cols="12" sm="6" md="6">
+          <v-alert icon="fa-solid fa-circle-exclamation">
+            this offer is not available anymore.
+          </v-alert></v-col
+        >
+      </v-row>
+      <!-- <v-container>
         <v-sheet width="1100" class="pa-6 pt-10 mt-30 mx-auto" elevation="1">
           <h1 class="text-h2 mb-2">Podnájemní smlouva</h1>
 
@@ -168,7 +175,7 @@ const totalSum = expenses.value.reduce((sum, item) => sum + item.value, 0);
             tyto náklady uhradit v plné výši.
           </p>
         </v-sheet>
-      </v-container>
+      </v-container> -->
     </div>
   </v-container>
 </template>

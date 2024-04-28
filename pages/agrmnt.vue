@@ -35,27 +35,7 @@ const router = useRouter();
 const correctPassword = "leech";
 
 async function handleLogin() {
-  // const fetchIpData = async (ipAddress: string, accessKey: string) => {
-  //   const url = `http://api.ipstack.com/${ipAddress}?access_key=${accessKey}&format=1`;
-
-  //   try {
-  //     const { data } = await useFetch(url);
-  //     console.log(data.value);
-
-  //     return data.value;
-  //   } catch (error) {
-  //     console.error("Error fetching IP data:", error);
-  //     return null;
-  //   }
-  // };
-
-  // Usage:
-  // const accessKey = 'YOUR_ACCESS_KEY_FROM_IPSTACK';
-  // fetchIpData('134.201.250.155', accessKey).then(data => console.log(data));
-
   const deviceInfo = useDeviceInfo();
-
-  // const resData = await fetchIpData('ip', 'ac')
 
   const passed = password.value === correctPassword;
   await $fetch("/api/logs", {
