@@ -65,17 +65,11 @@ async function handleLogin() {
     <v-row justify="center" align="center" class="h-screen">
       <v-col cols="12" sm="6" md="5">
         <v-card>
-          <v-card-title
-            >{{ users.find((user) => user.user)?.password === password }}
-            {{ nepal_pass === password ? "true" : "false" }}</v-card-title
-          >
           <v-form @submit.prevent="handleLogin">
-            <v-card-title class="text-center"> Enter password </v-card-title>
+            <v-card-title class="text-center"> Enter username & password </v-card-title>
             <v-card-text>
               <v-text-field v-model="user" label="User" type="text"></v-text-field>
               <v-text-field v-model="password" label="Password" type="password"></v-text-field>
-
-              <span>pass</span>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>

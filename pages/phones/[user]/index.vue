@@ -79,7 +79,10 @@ const { data: expenses } = await useAsyncData<extendedExpense[]>("expenses", () 
 const { data: expensesRaw } = await useAsyncData("expenses-raw", () =>
   $fetch("/api/expense/raw", {
     method: "GET",
-    query: { groupName: user.replace("toet", "nha toet").replace("nepomuk", "nepal") },
+    query: {
+      groupName: user.replace("toet", "nha toet").replace("nepomuk", "nepal"),
+      type: "others",
+    },
   })
 );
 
@@ -135,139 +138,145 @@ watch(summary, (val) => {
 </script>
 <template>
   <v-container v-if="isValid" class="min-h-screen">
-    <div class="d-flex justify-center align-center h-screen">
-      <v-row>
-        <v-col cols="5">
-          <v-card class="mb-5">
-            <v-card-text>
-              <v-list>
-                <v-list-item
-                  v-for="(expense, i) in expenses?.filter(
-                    (item, i) => item.year === new Date().getFullYear() || i < 6
-                  )"
-                  :key="i"
-                >
-                  <v-list-item-title>
-                    {{ getdate(expense.month || 0, expense.year || 0) }}
-                  </v-list-item-title>
+    <h2 class="text-h2">Vyúčtování</h2>
+    <v-sheet class="d-flex align-center pa-3">
+      <div>
+        <v-row>
+          <v-col cols="5">
+            <v-card class="mb-5">
+              <v-card-text>
+                <v-list>
+                  <v-list-item
+                    v-for="(expense, i) in expenses?.filter(
+                      (item, i) => item.year === new Date().getFullYear() || i < 6
+                    )"
+                    :to="{
+                      name: 'phones-user-date',
+                      params: { user: params.user, date: `${expense.month || 0}-${expense.year}` },
+                      query: {
+                        code: query.code,
+                      },
+                    }"
+                    :key="i"
+                  >
+                    <v-list-item-title>
+                      {{ getdate(expense.month || 0, expense.year || 0) }}
+                    </v-list-item-title>
 
-                  <template #append>
-                    <v-chip
-                      variant="tonal"
-                      :color="
-                        expense.status === 'paid'
-                          ? 'info'
-                          : expense.status === 'partly paid'
-                          ? 'warning'
-                          : 'warning'
-                      "
-                    >
-                      {{ expense.total_amount }} CZK
-                    </v-chip>
-                  </template>
-                </v-list-item>
-              </v-list>
-            </v-card-text>
-          </v-card>
-          <v-card v-if="expensesRaw && expensesRaw.length > 0">
-            <v-card-text>
-              <v-list>
-                <v-list-item v-for="(expense, i) in expensesRaw" :key="i">
-                  <v-list-item-title>
-                    {{ getdate(expense.month || 0, expense.year || 0) }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle v-if="expense.group_name">
-                    {{ expense.comment }}
-                  </v-list-item-subtitle>
+                    <template #append>
+                      <v-chip
+                        variant="tonal"
+                        :color="
+                          expense.status === 'paid'
+                            ? 'info'
+                            : expense.status === 'partly paid'
+                            ? 'warning'
+                            : 'warning'
+                        "
+                      >
+                        {{ expense.total_amount }} CZK
+                      </v-chip>
+                    </template>
+                  </v-list-item>
+                </v-list>
+              </v-card-text>
+            </v-card>
+            <v-card v-if="expensesRaw && expensesRaw.length > 0">
+              <v-card-text>
+                <v-list>
+                  <v-list-item v-for="(expense, i) in expensesRaw" :key="i">
+                    <v-list-item-title>
+                      {{ getdate(expense.month || 0, expense.year || 0) }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle v-if="expense.group_name">
+                      {{ expense.comment }}
+                    </v-list-item-subtitle>
 
-                  <template #append>
-                    <v-chip
-                      :variant="
-                        expense.year <= Number(currentYear) && expense.month <= Number(currentMonth)
-                          ? 'plain'
-                          : 'tonal'
-                      "
-                    >
-                      {{ expense.amount }} CZK
-                    </v-chip>
-                  </template>
-                </v-list-item>
-              </v-list>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <v-col cols="7">
-          <v-card class="mb-5">
-            <v-card-text>
-              <v-table>
-                <thead>
-                  <tr>
-                    <th class="text-left">Stat</th>
-                    <th class="text-left">Hodnota</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in summary" :key="item.label">
-                    <td>{{ item.label }}</td>
-                    <td>
-                      <v-chip variant="outlined" :color="Number(item.value) < 0 ? 'error' : 'primary'">{{
-                        item.value + " CZK"
-                      }}</v-chip>
-                    </td>
-                  </tr>
-                </tbody>
-              </v-table></v-card-text
-            >
-          </v-card>
-
-          <v-card class="mb-5">
-            <v-card-text>
-              <v-table>
-                <thead>
-                  <tr>
-                    <th colspan="2" class="text-left">Posledni 3 prijate platby</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(item, i) in payments?.filter((_item, i) => i < 3)" :key="i">
-                    <td>{{ item.transaction_date }}</td>
-                    <td>{{ item.amount }} CZK</td>
-                  </tr>
-                </tbody>
-              </v-table>
-            </v-card-text>
-          </v-card>
-
-          <v-card>
-            <v-card-text>
-              <v-sheet
-                :height="200"
-                class="d-flex align-center justify-center flex-wrap text-center mx-auto p-4"
-              >
+                    <template #append>
+                      <v-chip
+                        :variant="
+                          expense.year <= Number(currentYear) && expense.month <= Number(currentMonth)
+                            ? 'plain'
+                            : 'tonal'
+                        "
+                      >
+                        {{ expense.amount }} CZK
+                      </v-chip>
+                    </template>
+                  </v-list-item>
+                </v-list>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="7">
+            <v-card class="mb-5">
+              <v-card-text>
                 <v-table>
                   <tbody>
-                    <tr>
-                      <td>Cislo uctu</td>
-                      <td>{{ bankAccount }}/{{ bankCode }}</td>
+                    <tr v-for="item in summary" :key="item.label">
+                      <td>{{ item.label }}</td>
+                      <td>
+                        <v-chip
+                          variant="outlined"
+                          :color="Number(item.value) < 0 ? 'error' : 'primary'"
+                          >{{ item.value + " CZK" }}</v-chip
+                        >
+                      </td>
                     </tr>
+                  </tbody>
+                </v-table></v-card-text
+              >
+            </v-card>
+
+            <v-card class="mb-5">
+              <v-card-text>
+                <v-table>
+                  <thead>
                     <tr>
-                      <td>Castka</td>
-                      <td>{{ summary.find((i) => i.label === "Stav")?.value.replace("-", "") }} CZK</td>
+                      <th colspan="2" class="text-left">Poslední 3 přijaté platby</th>
                     </tr>
-                    <tr>
-                      <td>Zprava pro prijemce</td>
-                      <td>"{{ user }}"</td>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, i) in payments?.filter((_item, i) => i < 3)" :key="i">
+                      <td>{{ item.transaction_date }}</td>
+                      <td>{{ item.amount }} CZK</td>
                     </tr>
                   </tbody>
                 </v-table>
+              </v-card-text>
+            </v-card>
 
-                <v-img :src="qrURl" v-if="qrURl" width="100"></v-img>
-              </v-sheet>
-            </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
-    </div>
+            <v-card>
+              <v-card-text>
+                <v-sheet class="d-flex align-center justify-center flex-wrap text-center mx-auto p-1">
+                  <v-table density="compact">
+                    <tbody>
+                      <tr>
+                        <td>Číslo účtu</td>
+                        <td>{{ bankAccount }}/{{ bankCode }}</td>
+                      </tr>
+                      <tr>
+                        <td>Částka</td>
+                        <td>
+                          {{ summary.find((i) => i.label === "Stav")?.value.replace("-", "") }} CZK
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Zpráva pro příjemce</td>
+                        <td>"{{ user }}"</td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+
+                  <v-img :src="qrURl" v-if="qrURl" width="116"></v-img>
+                  <v-btn color="primary"> colr </v-btn>
+                </v-sheet>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+      </div>
+    </v-sheet>
   </v-container>
 
   <v-container v-else>

@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import supabase from "./supabase.config";
+import vuetify from './vuetify.config'
 export default defineNuxtConfig({
   devtools: { enabled: true },
   app: {
@@ -39,12 +40,8 @@ export default defineNuxtConfig({
     }
   },
   vuetify: {
-    vuetifyOptions: {
-      icons: {
-        defaultSet: "fa",
-        sets: ["fa", "mdi"],
-      },
-    },
+    
+    vuetifyOptions:  './vuetify.config.ts'
   },
   googleFonts: {
     outputDir: "assets/fonts",

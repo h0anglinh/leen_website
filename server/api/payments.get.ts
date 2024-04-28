@@ -14,7 +14,7 @@ export default eventHandler(async (event) => {
 
 
 
-  const { data, error } = await instance
+  const { data, error } = await instance.order('transaction_date', {ascending: false})
   if(error){
     throw createError({
       statusCode: Number(error.code),
