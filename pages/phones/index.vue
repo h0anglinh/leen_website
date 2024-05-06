@@ -34,7 +34,7 @@ async function handleLogin() {
     return;
   }
 
-  const theUser = user.value.toLowerCase();
+  const theUser = user.value.toLowerCase().trim();
   const deviceInfo = useDeviceInfo();
 
   const passed = users.value.find((i) => i.user === theUser)?.user === theUser;

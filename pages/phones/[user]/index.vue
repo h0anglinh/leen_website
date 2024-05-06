@@ -92,6 +92,8 @@ const { data: payments } = await useAsyncData("payments", () =>
   })
 );
 
+const { mobile } = useDisplay();
+
 onMounted(() => {
   if (payments.value) {
     const items = payments.value.reduce((acc, item) => acc + (item.amount || 0), 0);
@@ -149,7 +151,7 @@ watch(summary, (val) => {
     <h2 class="text-h2 my-10">Vyúčtování</h2>
     <v-sheet class="d-flex align-center pa-3">
       <v-row>
-        <v-col cols="4">
+        <v-col cols="12" md="4" :order="mobile ? 2 : 1">
           <v-card class="mb-5">
             <v-card-text>
               <v-list>
@@ -209,7 +211,7 @@ watch(summary, (val) => {
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col cols="5">
+        <v-col cols="12" md="5" :order="mobile ? 1 : 2">
           <v-card class="mb-5">
             <v-card-text>
               <v-table>
@@ -249,7 +251,7 @@ watch(summary, (val) => {
             <v-card-text>
               <v-sheet class="d-flex align-center justify-center flex-wrap text-center mx-auto p-1">
                 <v-row>
-                  <v-col cols="8"
+                  <v-col cols="12" md="8"
                     ><v-table density="compact">
                       <tbody>
                         <tr>
@@ -270,8 +272,8 @@ watch(summary, (val) => {
                       </tbody>
                     </v-table></v-col
                   >
-                  <v-col>
-                    <v-img :src="qrURl" v-if="qrURl" width="110"></v-img>
+                  <v-col cols="12" md="4">
+                    <v-img :src="qrURl" v-if="qrURl" width="110" class="mx-auto"></v-img>
                   </v-col>
                 </v-row>
               </v-sheet>
