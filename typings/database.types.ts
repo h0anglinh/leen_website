@@ -443,21 +443,36 @@ export type Database = {
       }
       tariff: {
         Row: {
+          action_price: number | null
+          call_rate: number | null
+          data: number | null
           description: string | null
+          mms_rate: number | null
           monthly_fee: number
           name: string
+          sms_rate: number | null
           tariff_id: number
         }
         Insert: {
+          action_price?: number | null
+          call_rate?: number | null
+          data?: number | null
           description?: string | null
+          mms_rate?: number | null
           monthly_fee: number
           name: string
+          sms_rate?: number | null
           tariff_id?: number
         }
         Update: {
+          action_price?: number | null
+          call_rate?: number | null
+          data?: number | null
           description?: string | null
+          mms_rate?: number | null
           monthly_fee?: number
           name?: string
+          sms_rate?: number | null
           tariff_id?: number
         }
         Relationships: []
@@ -696,6 +711,7 @@ export type Database = {
         Row: {
           correct_pass: boolean | null
           created_at: string
+          from: string | null
           id: number
           meta: Json | null
           MODE: string | null
@@ -704,6 +720,7 @@ export type Database = {
         Insert: {
           correct_pass?: boolean | null
           created_at?: string
+          from?: string | null
           id?: number
           meta?: Json | null
           MODE?: string | null
@@ -712,28 +729,11 @@ export type Database = {
         Update: {
           correct_pass?: boolean | null
           created_at?: string
+          from?: string | null
           id?: number
           meta?: Json | null
           MODE?: string | null
           user?: string | null
-        }
-        Relationships: []
-      }
-      test_table: {
-        Row: {
-          created_at: string
-          id: number
-          title: string | null
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          title?: string | null
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          title?: string | null
         }
         Relationships: []
       }

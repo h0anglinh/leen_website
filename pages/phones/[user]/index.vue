@@ -52,13 +52,10 @@ function updateExpenseStatus() {
   expenses.value = newExpense.reverse();
 }
 const encryptedCode = query.code as string;
-let [user, time] = (
-  CryptoJS.AES.decrypt(encryptedCode, encryptKey).toString(CryptoJS.enc.Utf8) as string
-).split(":");
+let [user, time] = (CryptoJS.AES.decrypt(encryptedCode, encryptKey).toString(CryptoJS.enc.Utf8) as string).split(":");
 
 const timestamp = parseInt(time);
-isValid.value =
-  new Date().getTime() - timestamp < (is_dev ? 9999999999 : 300000) && params.user === user; // Platnost 5 minut
+isValid.value = new Date().getTime() - timestamp < (is_dev ? 9999999999 : 300000) && params.user === user; // Platnost 5 minut
 
 if (!isValid.value && process.env.NODE_ENV === "production") {
   throw createError({
@@ -72,7 +69,9 @@ type extendedExpense = Tables<{ schema: "mobile_services" }, "group_expenses_sum
 const { data: expenses } = await useAsyncData<extendedExpense[]>("expenses", () =>
   $fetch("/api/expense", {
     method: "GET",
-    query: { groupName: user.replace("toet", "nha toet").replace("nepomuk", "nepal") },
+    query: {
+      groupName: user.replace("toet", "nha toet").replace("nepomuk", "nepal"),
+    },
   })
 );
 
@@ -87,7 +86,10 @@ const { data: expensesRaw } = await useAsyncData("expenses-raw", () =>
 );
 
 const { data: payments } = await useAsyncData("payments", () =>
-  $fetch("/api/payments", { method: "GET", query: { name: user.replace("nepomuk", "Suot") } })
+  $fetch("/api/payments", {
+    method: "GET",
+    query: { name: user.replace("nepomuk", "Suot") },
+  })
 );
 
 onMounted(() => {
@@ -105,8 +107,7 @@ onMounted(() => {
   if (expensesRaw.value) {
     const items =
       expensesRaw.value
-        ?.filter((ex) => ex.year <= Number(currentYear))
-        .filter((ex) => ex.month <= Number(currentMonth))
+        ?.filter((ex) => ex.year <= Number(currentYear) && ex.month <= Number(currentMonth))
         .reduce((acc, item) => acc + (item.amount || 0), 0) || 0;
 
     otherExpenseSum.value = items;
@@ -124,7 +125,10 @@ const getdate = (month: number, year: number) => {
 
 const summary = computed(() => {
   return [
-    { label: "Stav", value: (paymentSum.value - expenseSum.value - otherExpenseSum.value).toFixed(1) },
+    {
+      label: "Stav",
+      value: (paymentSum.value - expenseSum.value - otherExpenseSum.value).toFixed(1),
+    },
   ];
 });
 
@@ -133,158 +137,155 @@ watch(summary, (val) => {
   if (!val) return;
 
   const amount = val.find((i) => i.label === "Stav")?.value;
-  qrURl.value = useQRCodeUrl({ amount, accountNumber: bankAccount, bankCode: bankCode });
+  qrURl.value = useQRCodeUrl({
+    amount,
+    accountNumber: bankAccount,
+    bankCode: bankCode,
+  });
 });
 </script>
 <template>
   <v-container v-if="isValid" class="min-h-screen">
-    <h2 class="text-h2">Vyúčtování</h2>
+    <h2 class="text-h2 my-10">Vyúčtování</h2>
     <v-sheet class="d-flex align-center pa-3">
-      <div>
-        <v-row>
-          <v-col cols="5">
-            <v-card class="mb-5">
-              <v-card-text>
-                <v-list>
-                  <v-list-item
-                    v-for="(expense, i) in expenses?.filter(
-                      (item, i) => item.year === new Date().getFullYear() || i < 6
-                    )"
-                    :to="{
-                      name: 'phones-user-date',
-                      params: { user: params.user, date: `${expense.month || 0}-${expense.year}` },
-                      query: {
-                        code: query.code,
-                      },
-                    }"
-                    :key="i"
+      <v-row>
+        <v-col cols="4">
+          <v-card class="mb-5">
+            <v-card-text>
+              <v-list>
+                <v-list-item
+                  v-for="(expense, i) in expenses?.filter((item, i) => item.year === new Date().getFullYear() || i < 6)"
+                  :to="{
+                    name: 'phones-user-date',
+                    params: {
+                      user: params.user,
+                      date: `${expense.month || 0}-${expense.year}`,
+                    },
+                    query: {
+                      code: query.code,
+                    },
+                  }"
+                  :key="i"
+                >
+                  <v-list-item-subtitle>
+                    {{ getdate(expense.month || 0, expense.year || 0) }}
+                  </v-list-item-subtitle>
+
+                  <template #append>
+                    <v-chip
+                      variant="tonal"
+                      :color="
+                        expense.status === 'paid' ? 'info' : expense.status === 'partly paid' ? 'warning' : 'warning'
+                      "
+                    >
+                      {{ expense.total_amount }} CZK
+                    </v-chip>
+                  </template>
+                </v-list-item>
+              </v-list>
+            </v-card-text>
+          </v-card>
+          <v-card v-if="expensesRaw && expensesRaw.length > 0">
+            <v-card-text>
+              <v-list>
+                <v-list-item v-for="(expense, i) in expensesRaw" :key="i">
+                  <v-list-item-title>
+                    {{ getdate(expense.month || 0, expense.year || 0) }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle v-if="expense.group_name">
+                    {{ expense.comment }}
+                  </v-list-item-subtitle>
+                  <template #append>
+                    <v-chip
+                      :variant="
+                        expense.year <= Number(currentYear) && expense.month <= Number(currentMonth) ? 'plain' : 'tonal'
+                      "
+                    >
+                      {{ expense.amount }} CZK
+                    </v-chip>
+                  </template>
+                </v-list-item>
+              </v-list>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-col cols="5">
+          <v-card class="mb-5">
+            <v-card-text>
+              <v-table>
+                <tbody>
+                  <tr v-for="item in summary" :key="item.label">
+                    <td>{{ item.label }}</td>
+                    <td>
+                      <v-chip variant="outlined" :color="Number(item.value) < 0 ? 'error' : 'primary'">{{
+                        item.value + " CZK"
+                      }}</v-chip>
+                    </td>
+                  </tr>
+                </tbody>
+              </v-table></v-card-text
+            >
+          </v-card>
+
+          <v-card class="mb-5">
+            <v-card-text>
+              <v-table>
+                <thead>
+                  <tr>
+                    <th colspan="2" class="text-left">Poslední 3 přijaté platby</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, i) in payments?.filter((_item, i) => i < 3)" :key="i">
+                    <td>{{ item.transaction_date }}</td>
+                    <td class="text-right">{{ item.amount }} CZK</td>
+                  </tr>
+                </tbody>
+              </v-table>
+            </v-card-text>
+          </v-card>
+
+          <v-card>
+            <v-card-text>
+              <v-sheet class="d-flex align-center justify-center flex-wrap text-center mx-auto p-1">
+                <v-row>
+                  <v-col cols="8"
+                    ><v-table density="compact">
+                      <tbody>
+                        <tr>
+                          <td>Číslo účtu</td>
+                          <td>{{ bankAccount }}/{{ bankCode }}</td>
+                        </tr>
+                        <tr>
+                          <td>Částka</td>
+                          <td>
+                            {{ summary.find((i) => i.label === "Stav")?.value.replace("-", "") }}
+                            CZK
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Zpráva pro příjemce</td>
+                          <td>"{{ user }}"</td>
+                        </tr>
+                      </tbody>
+                    </v-table></v-col
                   >
-                    <v-list-item-title>
-                      {{ getdate(expense.month || 0, expense.year || 0) }}
-                    </v-list-item-title>
-
-                    <template #append>
-                      <v-chip
-                        variant="tonal"
-                        :color="
-                          expense.status === 'paid'
-                            ? 'info'
-                            : expense.status === 'partly paid'
-                            ? 'warning'
-                            : 'warning'
-                        "
-                      >
-                        {{ expense.total_amount }} CZK
-                      </v-chip>
-                    </template>
-                  </v-list-item>
-                </v-list>
-              </v-card-text>
-            </v-card>
-            <v-card v-if="expensesRaw && expensesRaw.length > 0">
-              <v-card-text>
-                <v-list>
-                  <v-list-item v-for="(expense, i) in expensesRaw" :key="i">
-                    <v-list-item-title>
-                      {{ getdate(expense.month || 0, expense.year || 0) }}
-                    </v-list-item-title>
-                    <v-list-item-subtitle v-if="expense.group_name">
-                      {{ expense.comment }}
-                    </v-list-item-subtitle>
-
-                    <template #append>
-                      <v-chip
-                        :variant="
-                          expense.year <= Number(currentYear) && expense.month <= Number(currentMonth)
-                            ? 'plain'
-                            : 'tonal'
-                        "
-                      >
-                        {{ expense.amount }} CZK
-                      </v-chip>
-                    </template>
-                  </v-list-item>
-                </v-list>
-              </v-card-text>
-            </v-card>
-          </v-col>
-          <v-col cols="7">
-            <v-card class="mb-5">
-              <v-card-text>
-                <v-table>
-                  <tbody>
-                    <tr v-for="item in summary" :key="item.label">
-                      <td>{{ item.label }}</td>
-                      <td>
-                        <v-chip
-                          variant="outlined"
-                          :color="Number(item.value) < 0 ? 'error' : 'primary'"
-                          >{{ item.value + " CZK" }}</v-chip
-                        >
-                      </td>
-                    </tr>
-                  </tbody>
-                </v-table></v-card-text
-              >
-            </v-card>
-
-            <v-card class="mb-5">
-              <v-card-text>
-                <v-table>
-                  <thead>
-                    <tr>
-                      <th colspan="2" class="text-left">Poslední 3 přijaté platby</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(item, i) in payments?.filter((_item, i) => i < 3)" :key="i">
-                      <td>{{ item.transaction_date }}</td>
-                      <td>{{ item.amount }} CZK</td>
-                    </tr>
-                  </tbody>
-                </v-table>
-              </v-card-text>
-            </v-card>
-
-            <v-card>
-              <v-card-text>
-                <v-sheet class="d-flex align-center justify-center flex-wrap text-center mx-auto p-1">
-                  <v-table density="compact">
-                    <tbody>
-                      <tr>
-                        <td>Číslo účtu</td>
-                        <td>{{ bankAccount }}/{{ bankCode }}</td>
-                      </tr>
-                      <tr>
-                        <td>Částka</td>
-                        <td>
-                          {{ summary.find((i) => i.label === "Stav")?.value.replace("-", "") }} CZK
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Zpráva pro příjemce</td>
-                        <td>"{{ user }}"</td>
-                      </tr>
-                    </tbody>
-                  </v-table>
-
-                  <v-img :src="qrURl" v-if="qrURl" width="116"></v-img>
-                  <v-btn color="primary"> colr </v-btn>
-                </v-sheet>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-      </div>
+                  <v-col>
+                    <v-img :src="qrURl" v-if="qrURl" width="110"></v-img>
+                  </v-col>
+                </v-row>
+              </v-sheet>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-sheet>
   </v-container>
 
   <v-container v-else>
     <v-row justify="center" align="center" class="h-screen">
       <v-col cols="12" sm="6" md="6">
-        <v-alert icon="fa-solid fa-circle-exclamation">
-          Heslo je neplatné nebo relace již vypršela
-        </v-alert>
+        <v-alert icon="fa-solid fa-circle-exclamation"> Heslo je neplatné nebo relace již vypršela </v-alert>
         <div class="d-flex align-center pa-5">
           <v-btn class="mx-auto" variant="tonal" :to="{ name: 'phones' }">Back</v-btn>
         </div>

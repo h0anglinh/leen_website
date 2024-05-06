@@ -15,20 +15,20 @@ const expenses = ref([
   { label: "Úklid", value: 174 },
   { label: "Popelnice", value: 174 },
   { label: "Společná elektřina", value: 380 },
-  { label: "Užívání telefonního čísla 607629072", value: 270 },
+  { label: "Užívání telefonního čísla 607629072", value: 270, excluded: true },
   { label: "Pojištění", value: 270 },
 ]);
 
 const paymentDetails = ref([
-  { label: "Číslo účtu", value: "301995370 / 2010" },
-  { label: "IBAN", value: "CZ91 2010 0000 0023 0199 5370" },
+  { label: "Číslo účtu", value: "2202867349 / 2010" },
+  { label: "IBAN", value: "CZ66 2010 0000 0022 0286 7349" },
   { label: "BIC/SWIFT", value: "FIOBCZPPXXX" },
 ]);
 
 const rent = 16000;
 const discount = 0.4;
 
-const totalSum = expenses.value.reduce((sum, item) => sum + item.value, 0);
+const totalSum = expenses.value.filter((i) => !i.excluded).reduce((sum, item) => sum + item.value, 0);
 
 // if (!route.query?.code && process.env.NODE_ENV === "production") {
 //   throw createError({
@@ -59,14 +59,12 @@ const totalSum = expenses.value.reduce((sum, item) => sum + item.value, 0);
       >
     </v-row>
     <div v-else>
-      <v-row justify="center" align="center" class="h-screen">
+      <!-- <v-row justify="center" align="center" class="h-screen">
         <v-col cols="12" sm="6" md="6">
-          <v-alert icon="fa-solid fa-circle-exclamation">
-            this offer is not available anymore.
-          </v-alert></v-col
+          <v-alert icon="fa-solid fa-circle-exclamation"> this offer is not available anymore. </v-alert></v-col
         >
-      </v-row>
-      <!-- <v-container>
+      </v-row> -->
+      <v-container>
         <v-sheet width="1100" class="pa-6 pt-10 mt-30 mx-auto" elevation="1">
           <h1 class="text-h2 mb-2">Podnájemní smlouva</h1>
 
@@ -79,9 +77,9 @@ const totalSum = expenses.value.reduce((sum, item) => sum + item.value, 0);
 
           <h3 class="text-h4">Článek 1: Předmět podnájmu</h3>
           <p>
-            Předmět podnájmu Pronajímatel se zavazuje poskytnout podnájemci do podnájmu nemovitost, která
-            zahrnuje 3 pokoje (2 ložnice a obývací pokoj), kuchyni, koupelnu, toaletu, balkon a sklep. V
-            byte se nachází jeden další pokoj, jehož přístup je nájemci zakázán.
+            Předmět podnájmu Pronajímatel se zavazuje poskytnout podnájemci do podnájmu nemovitost, která zahrnuje 3
+            pokoje (2 ložnice a obývací pokoj), kuchyni, koupelnu, toaletu, balkon a sklep. V byte se nachází jeden
+            další pokoj, jehož přístup je nájemci zakázán.
           </p>
           <h3 class="text-h4">Článek 2: Měsíční podnájemné a zálohy</h3>
 
@@ -100,8 +98,10 @@ const totalSum = expenses.value.reduce((sum, item) => sum + item.value, 0);
                 </thead>
                 <tbody>
                   <tr v-for="item in expenses" :key="item.label">
-                    <td>{{ item.label }}</td>
-                    <td class="text-right">{{ item.value }} CZK</td>
+                    <td :class="{ 'text-decoration-line-through': item.excluded }">{{ item.label }}</td>
+                    <td class="text-right" :class="{ 'text-decoration-line-through': item.excluded }">
+                      {{ item.value }} CZK
+                    </td>
                   </tr>
                   <tr>
                     <td><strong>Celkem za zálohy</strong></td>
@@ -116,13 +116,13 @@ const totalSum = expenses.value.reduce((sum, item) => sum + item.value, 0);
 
           <p>
             <span v-if="discount || discount !== 0"
-              >Pokud tato smlouva přejde v platnost je nájemci poskytnuta jednorazová sleva na nájemné,
-              která činí {{ discount * 100 }}% z ceny nájemného.</span
+              >Pokud tato smlouva přejde v platnost je nájemci poskytnuta jednorazová sleva na nájemné, která činí
+              {{ discount * 100 }}% z ceny nájemného.</span
             >
             (Nájemné do 31.12.2024 činí {{ rent - rent * discount }}CZK). Celkově nájemce uhradí
-            <strong>měsíčně {{ rent - rent * discount + totalSum }} CZK</strong>. Platnost a sleva Tato
-            smlouva je platná do 31.12.2024. Částky jsou splatné nejpozději do 5. dne v měsíci. První
-            platba za nájem musí být provedena nejpozději <strong>5.5.2024</strong>.
+            <strong>měsíčně {{ rent - rent * discount + totalSum }} CZK</strong>. Platnost a sleva Tato smlouva je
+            platná do 31.12.2024. Částky jsou splatné nejpozději do 5. dne v měsíci. První platba za nájem musí být
+            provedena nejpozději <strong>5.5.2024</strong>.
           </p>
 
           Platebni údaje pronajímatele: <br />
@@ -149,33 +149,31 @@ const totalSum = expenses.value.reduce((sum, item) => sum + item.value, 0);
           <h3 class="text-h4">Článek 4: Sankce</h3>
           <p>
             V případě zpoždění s platbou, nájemce zaplatí penalizaci ve výši 10% z dlužné částky.
-            <br />Pokud nájemné nebude uhrazeno po dobu dvou měsíců, pronajímatel má právo okamžitě
-            vypovědět smlouvu a omezit nájemci přístup do bytu.
+            <br />Pokud nájemné nebude uhrazeno po dobu dvou měsíců, pronajímatel má právo okamžitě vypovědět smlouvu a
+            omezit nájemci přístup do bytu.
           </p>
           <h3 class="text-h4">Článek 5: Prodloužení smlouvy</h3>
 
           <p>
-            V případě prodloužení této smlouvy po 31.12.2024 se měsíční nájemné automaticky navyšuje o
-            inflační doložku, jejíž výši určí pronajímatel v souladu s aktuálními ekonomickými
-            podmínkami.
+            V případě prodloužení této smlouvy po 31.12.2024 se měsíční nájemné automaticky navyšuje o inflační doložku,
+            jejíž výši určí pronajímatel v souladu s aktuálními ekonomickými podmínkami.
           </p>
 
           <h3 class="text-h4">Článek 6: Potvrzení a souhlas</h3>
           <p>
-            Souhlas s těmito podmínkami nájemci vyjádří uhrazením první zálohy do 5.5.2024, což bude
-            považováno za přijetí těchto podmínek.
+            Souhlas s těmito podmínkami nájemci vyjádří uhrazením první zálohy do 5.5.2024, což bude považováno za
+            přijetí těchto podmínek.
           </p>
           <h3 class="text-h4">Článek 7: Výpovědní lhůta a vyklizení bytu</h3>
           <p>
-            Výpovědní lhůta této smlouvy je jeden měsíc, který začíná běžet dnem doručení písemného
-            oznámení výpovědi druhé straně. Nájemci jsou povinni byt vyklidit nejpozději do posledního
-            dne platnosti nájemní smlouvy. V případě, že nájemci byt nevyklidí v stanoveném termínu,
-            pronajímatel má právo využít služby úklidové společnosti k vyklizení bytu. Náklady spojené s
-            vyklizením bytu úklidovou službou budou následně fakturovány nájemcům. Nájemci se zavazují
-            tyto náklady uhradit v plné výši.
+            Výpovědní lhůta této smlouvy je jeden měsíc, který začíná běžet dnem doručení písemného oznámení výpovědi
+            druhé straně. Nájemci jsou povinni byt vyklidit nejpozději do posledního dne platnosti nájemní smlouvy. V
+            případě, že nájemci byt nevyklidí v stanoveném termínu, pronajímatel má právo využít služby úklidové
+            společnosti k vyklizení bytu. Náklady spojené s vyklizením bytu úklidovou službou budou následně fakturovány
+            nájemcům. Nájemci se zavazují tyto náklady uhradit v plné výši.
           </p>
         </v-sheet>
-      </v-container> -->
+      </v-container>
     </div>
   </v-container>
 </template>

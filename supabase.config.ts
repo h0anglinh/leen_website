@@ -5,7 +5,6 @@ const supabase: NuxtConfig["supabase"] = {
   redirectOptions: {
     login: '/login',
     callback: '/callback',
-    cookieRedirect: true
   }
 };
 

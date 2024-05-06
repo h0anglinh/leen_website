@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import type { RouteLocationRaw } from "vue-router";
+import type { TablesInsert } from "~/typings/database.types";
+const MODE = process.env.NODE_ENV;
 const hash = useRoute().hash;
 
 const items = ref([
@@ -14,7 +17,16 @@ const items = ref([
 
 const currentItem = ref("device");
 
-const contacts = ref([
+const contacts = ref<
+  {
+    label: string;
+    href?: string;
+    to?: RouteLocationRaw;
+    hide?: boolean;
+    icon?: string;
+    meta?: { tooltip: { msg: string; availableForHash?: string } };
+  }[]
+>([
   {
     label: "+420 774 316 610",
     href: "tel:+420774316610",
@@ -43,10 +55,29 @@ const contacts = ref([
       },
     },
   },
+  {
+    label: "Send me a message",
+    icon: "mdi-message-outline",
+    to: { name: "send_me_a_message" },
+  },
 ]);
+
+const route = useRoute();
 
 onMounted(() => {
   currentItem.value = items.value.find((item) => item.hash === hash)?.label || "device";
+  const deviceInfo = useDeviceInfo();
+
+  if (MODE !== "production") {
+    const body: TablesInsert<"log"> = {
+      meta: deviceInfo as any,
+      from: route.path,
+    };
+    $fetch("/api/logs", {
+      method: "POST",
+      body,
+    });
+  }
 });
 </script>
 <template>
@@ -60,27 +91,25 @@ onMounted(() => {
         </p>
         <h2 class="text-decoration-underline">How You Can Help</h2>
         <p>
-          If you could return the {{ currentItem }} to me, I would be incredibly thankful. If you feel
-          comfortable, we can arrange for the {{ currentItem }} to be returned in person, or I can
-          organize for it to be picked up at a location that suits you.
+          If you could return the {{ currentItem }} to me, I would be incredibly thankful. If you feel comfortable, we
+          can arrange for the {{ currentItem }} to be returned in person, or I can organize for it to be picked up at a
+          location that suits you.
         </p>
         <h2>Additional Options</h2>
         <ul>
           <li>
-            Police: You may also consider handing the {{ currentItem }} over to the nearest police
-            station. The police have procedures for found items and can help return them to their
-            rightful owners.
+            Police: You may also consider handing the {{ currentItem }} over to the nearest police station. The police
+            have procedures for found items and can help return them to their rightful owners.
           </li>
           <li>
-            Facility Staff: If you found the {{ currentItem }} in a specific facility, like a restaurant
-            or café, you could approach the staff or management, who can assist in getting the
-            {{ currentItem }} back to me.
+            Facility Staff: If you found the {{ currentItem }} in a specific facility, like a restaurant or café, you
+            could approach the staff or management, who can assist in getting the {{ currentItem }} back to me.
           </li>
         </ul>
 
         <p>
-          It's amazing to see that there are still people in the world who are willing to help others.
-          Thank you for your time and for deciding to do the right thing.
+          It's amazing to see that there are still people in the world who are willing to help others. Thank you for
+          your time and for deciding to do the right thing.
         </p>
 
         <p>
@@ -95,12 +124,11 @@ onMounted(() => {
             :text="contact.meta?.tooltip.msg"
             :disabled="
               !contact.meta?.tooltip.msg ||
-              (contact.meta.tooltip.availableForHash !== hash &&
-                contact.meta.tooltip.availableForHash !== 'all')
+              (contact.meta.tooltip.availableForHash !== hash && contact.meta.tooltip.availableForHash !== 'all')
             "
           >
             <template v-slot:activator="{ props }">
-              <v-chip :href="contact.href" :prepend-icon="contact.icon" v-bind="props">
+              <v-chip :href="contact.href" :to="contact.to" :prepend-icon="contact.icon" v-bind="props">
                 {{ contact.label }}
               </v-chip>
             </template>

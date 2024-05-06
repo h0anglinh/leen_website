@@ -10,11 +10,10 @@ useHead({
   meta: [{ property: "og:title", content: `${headTitle} | LH` }],
 });
 
-definePageMeta({
-  middleware: "auth",
-});
+// definePageMeta({
+//   middleware: "auth",
+// });
 
-const password = ref("");
 const user = ref("");
 const router = useRouter();
 
@@ -36,7 +35,7 @@ async function handleLogin() {
   }
   const deviceInfo = useDeviceInfo();
 
-  const passed = users.value.find((i) => i.user === user.value)?.password === password.value;
+  const passed = users.value.find((i) => i.user === user.value)?.user === user.value;
   const mode = process.env.NODE_ENV;
   const body: TablesInsert<"log"> = {
     correct_pass: passed,
@@ -66,10 +65,9 @@ async function handleLogin() {
       <v-col cols="12" sm="6" md="5">
         <v-card>
           <v-form @submit.prevent="handleLogin">
-            <v-card-title class="text-center"> Enter username & password </v-card-title>
+            <v-card-title class="text-center"> Enter username </v-card-title>
             <v-card-text>
               <v-text-field v-model="user" label="User" type="text"></v-text-field>
-              <v-text-field v-model="password" label="Password" type="password"></v-text-field>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>

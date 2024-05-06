@@ -13,6 +13,7 @@ const signIn = handleSubmit(() => {});
 
 const providers: { label: string; provider: Provider }[] = [
   { label: "Login with Google", provider: "google" },
+  { label: "Login with Facebook", provider: "facebook" },
 ];
 
 const handleLogOut = async () => {
