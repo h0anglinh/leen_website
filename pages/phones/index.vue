@@ -33,13 +33,15 @@ async function handleLogin() {
     alert("invalid user ");
     return;
   }
+
+  const theUser = user.value.toLowerCase();
   const deviceInfo = useDeviceInfo();
 
-  const passed = users.value.find((i) => i.user === user.value)?.user === user.value;
+  const passed = users.value.find((i) => i.user === theUser)?.user === theUser;
   const mode = process.env.NODE_ENV;
   const body: TablesInsert<"log"> = {
     correct_pass: passed,
-    user: user.value,
+    user: theUser,
     meta: deviceInfo as any,
     MODE: mode,
   };
@@ -51,8 +53,8 @@ async function handleLogin() {
 
   if (passed) {
     const timestamp = new Date().getTime();
-    const code = CryptoJS.AES.encrypt(`${user.value}:${timestamp}`, encryptKey).toString();
-    router.push({ name: "phones-user", params: { user: user.value }, query: { code } });
+    const code = CryptoJS.AES.encrypt(`${theUser}:${timestamp}`, encryptKey).toString();
+    router.push({ name: "phones-user", params: { user: theUser }, query: { code } });
   } else {
     alert("Incorrect user / password");
   }
