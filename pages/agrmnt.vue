@@ -1,7 +1,6 @@
 <template>
   <v-container class="h-screen">
     <v-row justify="center" align="center" class="h-screen">
-      user - {{ user }}
       <v-col cols="12" sm="6" md="4">
         <v-card>
           <v-form @submit.prevent="handleLogin">
@@ -35,7 +34,6 @@ const isLoading = ref(false);
 const password = ref("");
 const router = useRouter();
 const route = useRoute();
-const user = useSupabaseUser();
 const correctPassword = "leech";
 
 async function handleLogin() {

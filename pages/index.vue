@@ -123,7 +123,7 @@ const { mobile } = useDisplay();
     letter-spacing: 1.2rem !important;
     @media (max-width: 768px) {
       font-size: 1.3em;
-      letter-spacing: 1rem !important; // Menší velikost fontu pro mobilní zařízení
+      letter-spacing: 1rem !important;
     }
     position: relative;
     display: inline-flex;

@@ -28,26 +28,28 @@ const paymentDetails = ref([
 const rent = 16000;
 const discount = 0.4;
 
+const totalSumBefore = expenses.value.reduce((sum, item) => sum + item.value, 0);
 const totalSum = expenses.value.filter((i) => !i.excluded).reduce((sum, item) => sum + item.value, 0);
 
-// if (!route.query?.code && process.env.NODE_ENV === "production") {
-//   throw createError({
-//     statusCode: 401,
-//     message: "Access denied",
-//   });
-// }
+if (!route.query?.code && process.env.NODE_ENV === "production") {
+  throw createError({
+    statusCode: 401,
+    message: "Access denied",
+  });
+}
 
-// const encryptedCode = route.query.code as string;
-// const decryptedCode = CryptoJS.AES.decrypt(encryptedCode, encryptKey).toString(CryptoJS.enc.Utf8);
-// const timestamp = parseInt(decryptedCode);
-// isValid.value = new Date().getTime() - timestamp < 300000; // Platnost 5 minut
+const encryptedCode = route.query.code as string;
+const decryptedCode = CryptoJS.AES.decrypt(encryptedCode, encryptKey).toString(CryptoJS.enc.Utf8);
+const timestamp = parseInt(decryptedCode);
 
-// if ((!route.query?.code || !isValid) && process.env.NODE_ENV === "production") {
-//   throw createError({
-//     statusCode: 401,
-//     message: "Access denied",
-//   });
-// }
+isValid.value = new Date().getTime() - timestamp < 300000 && timestamp > 1717041769; // Platnost 5 minut
+
+if ((!route.query?.code || !isValid) && process.env.NODE_ENV === "production") {
+  throw createError({
+    statusCode: 401,
+    message: "Access denied",
+  });
+}
 </script>
 <template>
   <v-container>
@@ -106,7 +108,10 @@ const totalSum = expenses.value.filter((i) => !i.excluded).reduce((sum, item) =>
                   <tr>
                     <td><strong>Celkem za zálohy</strong></td>
                     <td class="text-right">
-                      <strong>{{ totalSum }} CZK</strong>
+                      <strong
+                        ><span class="text-decoration-line-through">{{ totalSumBefore }}</span>
+                        {{ totalSum }} CZK</strong
+                      >
                     </td>
                   </tr>
                 </tbody>
@@ -120,9 +125,12 @@ const totalSum = expenses.value.filter((i) => !i.excluded).reduce((sum, item) =>
               {{ discount * 100 }}% z ceny nájemného.</span
             >
             (Nájemné do 31.12.2024 činí {{ rent - rent * discount }}CZK). Celkově nájemce uhradí
-            <strong>měsíčně {{ rent - rent * discount + totalSum }} CZK</strong>. Platnost a sleva Tato smlouva je
-            platná do 31.12.2024. Částky jsou splatné nejpozději do 5. dne v měsíci. První platba za nájem musí být
-            provedena nejpozději <strong>5.5.2024</strong>.
+            <strong
+              >měsíčně <span class="text-decoration-line-through">{{ rent - rent * discount + totalSumBefore }}</span>
+              {{ rent - rent * discount + totalSum }} CZK</strong
+            >. Platnost a sleva Tato smlouva je platná do 31.12.2024. Částky jsou splatné nejpozději do 5. dne v měsíci.
+            První platba za nájem musí být provedena nejpozději
+            <strong> <span class="text-decoration-line-through">5.5.2024</span> <span>9.5.2024</span> </strong>.
           </p>
 
           Platebni údaje pronajímatele: <br />
@@ -134,7 +142,12 @@ const totalSum = expenses.value.filter((i) => !i.excluded).reduce((sum, item) =>
                   <tr v-for="item in paymentDetails" :key="item.label">
                     <td>{{ item.label }}</td>
                     <td class="text-right">
-                      <strong>{{ item.value }}</strong>
+                      <strong>
+                        <span class="text-decoration-line-through" v-if="item.label === 'Číslo účtu'"
+                          >301995370 / 2010</span
+                        >
+                        {{ item.value }}</strong
+                      >
                     </td>
                   </tr>
                 </tbody>
@@ -161,7 +174,8 @@ const totalSum = expenses.value.filter((i) => !i.excluded).reduce((sum, item) =>
 
           <h3 class="text-h4">Článek 6: Potvrzení a souhlas</h3>
           <p>
-            Souhlas s těmito podmínkami nájemci vyjádří uhrazením první zálohy do 5.5.2024, což bude považováno za
+            Souhlas s těmito podmínkami nájemci vyjádří uhrazením první zálohy do
+            <span class="text-decoration-line-through">5.5.2024</span> <span>9.5.2024</span>, což bude považováno za
             přijetí těchto podmínek.
           </p>
           <h3 class="text-h4">Článek 7: Výpovědní lhůta a vyklizení bytu</h3>

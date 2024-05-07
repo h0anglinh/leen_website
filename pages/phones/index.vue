@@ -26,6 +26,10 @@ const users = ref([
     user: "nepomuk",
     password: nepal_pass,
   },
+  {
+    user: "incredibles",
+    password: nepal_pass,
+  },
 ]);
 
 async function handleLogin() {
@@ -33,11 +37,10 @@ async function handleLogin() {
     alert("invalid user ");
     return;
   }
-
   const theUser = user.value.toLowerCase().trim();
+  const passed = users.value.find((i) => i.user === theUser)?.user === theUser;
   const deviceInfo = useDeviceInfo();
 
-  const passed = users.value.find((i) => i.user === theUser)?.user === theUser;
   const mode = process.env.NODE_ENV;
   const body: TablesInsert<"log"> = {
     correct_pass: passed,

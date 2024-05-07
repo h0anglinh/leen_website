@@ -31,7 +31,9 @@ if (!tariffs) {
 }
 const fetchTariffs = async () => {
   const groupData = await $fetch("/api/mobiles/group", {
-    query: { groupName: typeof group === "string" ? group.replace("nepomuk", "nepal") : "" },
+    query: {
+      groupName: typeof group === "string" ? group.replace("nepomuk", "nepal").replace("toet", "nha toet") : "",
+    },
   });
 
   if (groupData && groupData.length > 0) {
@@ -107,7 +109,7 @@ onMounted(async () => {
                   <tr>
                     <td>Voláni a SMS</td>
                     <td class="text-right" v-if="item.call_rate">
-                      {{ item.call_rate + item.call_rate * ((thegroup.margin || 5) / 100) }} CZK
+                      {{ (item.call_rate + item.call_rate * ((thegroup.margin || 5) / 100)).toFixed(1) }} CZK
                     </td>
                   </tr>
                   <tr>
