@@ -210,6 +210,13 @@ export type Database = {
             foreignKeyName: "expenses_group_name_fkey"
             columns: ["group_name"]
             isOneToOne: false
+            referencedRelation: "tariff_per_group"
+            referencedColumns: ["group_name"]
+          },
+          {
+            foreignKeyName: "expenses_group_name_fkey"
+            columns: ["group_name"]
+            isOneToOne: false
             referencedRelation: "vw_invoice_items"
             referencedColumns: ["group_name"]
           },
@@ -433,6 +440,13 @@ export type Database = {
             referencedColumns: ["tariff_id"]
           },
           {
+            foreignKeyName: "phone_numbers_tariff_id_fkey"
+            columns: ["tariff_id"]
+            isOneToOne: false
+            referencedRelation: "tariff_per_group"
+            referencedColumns: ["tariff_id"]
+          },
+          {
             foreignKeyName: "phone_numbers_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
@@ -557,6 +571,13 @@ export type Database = {
             columns: ["group_name"]
             isOneToOne: false
             referencedRelation: "vw_phone_user_group"
+            referencedColumns: ["group_name"]
+          },
+          {
+            foreignKeyName: "expenses_group_name_fkey"
+            columns: ["group_name"]
+            isOneToOne: false
+            referencedRelation: "tariff_per_group"
             referencedColumns: ["group_name"]
           },
         ]
@@ -715,6 +736,9 @@ export type Database = {
           id: number
           meta: Json | null
           MODE: string | null
+          params: string | null
+          queries: string | null
+          to: string | null
           user: string | null
         }
         Insert: {
@@ -724,6 +748,9 @@ export type Database = {
           id?: number
           meta?: Json | null
           MODE?: string | null
+          params?: string | null
+          queries?: string | null
+          to?: string | null
           user?: string | null
         }
         Update: {
@@ -733,13 +760,30 @@ export type Database = {
           id?: number
           meta?: Json | null
           MODE?: string | null
+          params?: string | null
+          queries?: string | null
+          to?: string | null
           user?: string | null
         }
         Relationships: []
       }
     }
     Views: {
-      [_ in never]: never
+      tariff_per_group: {
+        Row: {
+          action_price: number | null
+          call_rate: number | null
+          data: number | null
+          group_name: string | null
+          mms_rate: number | null
+          monthly_fee: number | null
+          sms_rate: number | null
+          tariff_id: number | null
+          tariff_name: string | null
+          total_price: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never

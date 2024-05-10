@@ -36,6 +36,6 @@ export const useDeviceInfo = () => {
 
   
 
-  return { browser, device, language, navigator, doNotTrack: DNT };
+  return { browser, device, language, navigator, doNotTrack: DNT, ua, geolocation: navigator.geolocation };
 }
 
