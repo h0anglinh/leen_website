@@ -1,7 +1,7 @@
 import type { TablesInsert } from "~/typings/database.types";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  if(process.client){
+  if(process.client && process.env.NODE_ENV === 'production'){
     const user = useSupabaseUser()
     const deviceInfo = useDeviceInfo()
     const MODE = process.env.NODE_ENV;

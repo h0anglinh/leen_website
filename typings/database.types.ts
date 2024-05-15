@@ -458,9 +458,13 @@ export type Database = {
       tariff: {
         Row: {
           action_price: number | null
+          active: boolean | null
           call_rate: number | null
           data: number | null
           description: string | null
+          group_name:
+            | Database["mobile_services"]["Enums"]["tariff_group"]
+            | null
           mms_rate: number | null
           monthly_fee: number
           name: string
@@ -469,9 +473,13 @@ export type Database = {
         }
         Insert: {
           action_price?: number | null
+          active?: boolean | null
           call_rate?: number | null
           data?: number | null
           description?: string | null
+          group_name?:
+            | Database["mobile_services"]["Enums"]["tariff_group"]
+            | null
           mms_rate?: number | null
           monthly_fee: number
           name: string
@@ -480,9 +488,13 @@ export type Database = {
         }
         Update: {
           action_price?: number | null
+          active?: boolean | null
           call_rate?: number | null
           data?: number | null
           description?: string | null
+          group_name?:
+            | Database["mobile_services"]["Enums"]["tariff_group"]
+            | null
           mms_rate?: number | null
           monthly_fee?: number
           name?: string
@@ -720,7 +732,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      tariff_group: "o2" | "o2 family"
     }
     CompositeTypes: {
       [_ in never]: never
