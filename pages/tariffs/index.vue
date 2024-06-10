@@ -4,6 +4,11 @@ import type { Enums, Tables } from '~/typings/database.types'
 definePageMeta({
     middleware: 'semiauth',
 })
+
+const { path, query } = useRoute()
+if (!query.code) {
+    useRouter().push({ name: 'signin', query: { redirect: path } })
+}
 const tabs: { label: string; value: Enums<{ schema: 'mobile_services' }, 'tariff_group'> }[] = [
     { label: 'o2 (NEW)', value: 'o2' },
     { label: 'o2 family (OLD)', value: 'o2 family' },
@@ -17,12 +22,9 @@ const thegroup = ref<Tables<{ schema: 'mobile_services' }, 'groups'>>({
 
 const tariffs = ref<Tables<{ schema: 'mobile_services' }, 'tariff'>[]>()
 const tab = ref<Enums<{ schema: 'mobile_services' }, 'tariff_group'>>('o2')
-const { path, query } = useRoute()
-if (!query.code) {
-    useRouter().push({ name: 'signin', query: { redirect: path } })
-}
+
 const encryptKey = useRuntimeConfig().public.encryptKey
-let [user, time] = (CryptoJS.AES.decrypt(query.code, encryptKey).toString(CryptoJS.enc.Utf8) as string).split(':')
+let [user, time] = (CryptoJS.AES.decrypt(query.code || '', encryptKey).toString(CryptoJS.enc.Utf8) as string).split(':')
 
 const fetchTariffs = async () => {
     const groupData = await $fetch('/api/mobiles/group', {
