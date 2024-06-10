@@ -6,6 +6,7 @@ const encryptKey = useRuntimeConfig().public.encryptKey
 const { query, params } = useRoute()
 import { format } from 'date-fns'
 import { cs } from 'date-fns/locale'
+import usePersonalInfo from '~/composables/usePersonalInfo'
 const is_dev = query.mode ? query.mode === 'dev' : process.env.NODE_ENV === 'development'
 const isValid = ref(false)
 const paymentSum = ref(0)
@@ -107,10 +108,7 @@ onMounted(() => {
     }
 
     if (expensesRaw.value) {
-        const items =
-            expensesRaw.value
-                ?.filter((ex) => ex.year <= Number(currentYear) && ex.month <= Number(currentMonth))
-                .reduce((acc, item) => acc + (item.amount || 0), 0) || 0
+        const items = expensesRaw.value?.filter((ex) => ex.year <= Number(currentYear) && ex.month <= Number(currentMonth)).reduce((acc, item) => acc + (item.amount || 0), 0) || 0
 
         otherExpenseSum.value = items
     }
@@ -134,7 +132,7 @@ const summary = computed(() => {
     ]
 })
 
-const { bankAccount, bankCode } = usePayments()
+const { bankAccount, bankCode } = usePersonalInfo()
 watch(summary, (val) => {
     if (!val) return
 
@@ -174,16 +172,7 @@ watch(summary, (val) => {
                                     </v-list-item-subtitle>
 
                                     <template #append>
-                                        <v-chip
-                                            variant="tonal"
-                                            :color="
-                                                expense.status === 'paid'
-                                                    ? 'info'
-                                                    : expense.status === 'partly paid'
-                                                    ? 'warning'
-                                                    : 'warning'
-                                            "
-                                        >
+                                        <v-chip variant="tonal" :color="expense.status === 'paid' ? 'info' : expense.status === 'partly paid' ? 'warning' : 'warning'">
                                             {{ expense.total_amount }} CZK
                                         </v-chip>
                                     </template>
@@ -202,13 +191,7 @@ watch(summary, (val) => {
                                         {{ expense.comment }}
                                     </v-list-item-subtitle>
                                     <template #append>
-                                        <v-chip
-                                            :variant="
-                                                expense.year <= Number(currentYear) && expense.month <= Number(currentMonth)
-                                                    ? 'plain'
-                                                    : 'tonal'
-                                            "
-                                        >
+                                        <v-chip :variant="expense.year <= Number(currentYear) && expense.month <= Number(currentMonth) ? 'plain' : 'tonal'">
                                             {{ expense.amount }} CZK
                                         </v-chip>
                                     </template>
@@ -225,9 +208,7 @@ watch(summary, (val) => {
                                     <tr v-for="item in summary" :key="item.label">
                                         <td>{{ item.label }}</td>
                                         <td>
-                                            <v-chip variant="outlined" :color="Number(item.value) < 0 ? 'error' : 'primary'">{{
-                                                item.value + ' CZK'
-                                            }}</v-chip>
+                                            <v-chip variant="outlined" :color="Number(item.value) < 0 ? 'error' : 'primary'">{{ item.value + ' CZK' }}</v-chip>
                                         </td>
                                     </tr>
                                 </tbody>

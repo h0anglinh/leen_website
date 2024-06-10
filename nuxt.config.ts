@@ -36,7 +36,11 @@ export default defineNuxtConfig({
     "@vee-validate/nuxt",
     "@nuxtjs/supabase",
     "vuetify-nuxt-module",
+    '@pinia/nuxt',
   ],
+  pinia: {
+    storesDirs: ['./stores/**'],
+  },
 
   
   supabase,

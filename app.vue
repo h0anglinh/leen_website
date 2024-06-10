@@ -1,9 +1,10 @@
 <script setup lang="ts">
-const titleTemplate = (titleChunk: string) => {
+const title = 'Linh Hoang | Software Developer'
+const titleTemplate = (titleChunk: unknown) => {
     if (process.env.NODE_ENV === 'development') {
-        return titleChunk ? `DEV__${titleChunk} | LH` : 'DEV__Linh Hoang | Software Developer'
+        return titleChunk ? '[DEV] ${titleChunk} | LH' : `[DEV] ${title}`
     }
-    return titleChunk ? `${titleChunk} | LH` : 'Linh Hoang | Software Developer'
+    return titleChunk ? `${titleChunk} | LH` : title
 }
 
 useHead({

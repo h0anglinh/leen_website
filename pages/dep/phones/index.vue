@@ -26,6 +26,10 @@ const users = ref([
     user: "nepomuk",
     password: nepal_pass,
   },
+  {
+    user: "incredibles",
+    password: nepal_pass,
+  },
 ]);
 
 async function handleLogin() {
@@ -33,11 +37,10 @@ async function handleLogin() {
     alert("invalid user ");
     return;
   }
-
   const theUser = user.value.toLowerCase().trim();
+  const passed = users.value.find((i) => i.user === theUser)?.user === theUser;
   const deviceInfo = useDeviceInfo();
 
-  const passed = users.value.find((i) => i.user === theUser)?.user === theUser;
   const mode = process.env.NODE_ENV;
   const body: TablesInsert<"log"> = {
     correct_pass: passed,
@@ -54,8 +57,7 @@ async function handleLogin() {
   if (passed) {
     const timestamp = new Date().getTime();
     const code = CryptoJS.AES.encrypt(`${theUser}:${timestamp}`, encryptKey).toString();
-
-    router.push({ name: "phones-tariffs-group", params: { group: theUser }, query: { code } });
+    router.push({ name: "phones-user", params: { user: theUser }, query: { code } });
   } else {
     alert("Incorrect user / password");
   }
