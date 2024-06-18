@@ -2,11 +2,12 @@
 
 /** @type {import("prettier").Config} */
 const config = {
-    trailingComma: 'es5',
-    tabWidth: 4,
-    semi: false,
-    singleQuote: true,
-    printWidth: 190,
-}
+	trailingComma: "es5",
+	tabWidth: 4,
+	semi: true,
+	printWidth: 140,
+	tabWidth: 2,
+	useTabs: true,
+};
 
-module.exports = config
+module.exports = config;

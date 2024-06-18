@@ -503,6 +503,56 @@ export type Database = {
         }
         Relationships: []
       }
+      tariff_changes: {
+        Row: {
+          from_tariff_id: number | null
+          id: number
+          start_date: string
+          to_tariff_id: number | null
+        }
+        Insert: {
+          from_tariff_id?: number | null
+          id?: number
+          start_date: string
+          to_tariff_id?: number | null
+        }
+        Update: {
+          from_tariff_id?: number | null
+          id?: number
+          start_date?: string
+          to_tariff_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tariff_changes_from_tariff_id_fkey"
+            columns: ["from_tariff_id"]
+            isOneToOne: false
+            referencedRelation: "tariff"
+            referencedColumns: ["tariff_id"]
+          },
+          {
+            foreignKeyName: "tariff_changes_from_tariff_id_fkey"
+            columns: ["from_tariff_id"]
+            isOneToOne: false
+            referencedRelation: "tariff_per_group"
+            referencedColumns: ["tariff_id"]
+          },
+          {
+            foreignKeyName: "tariff_changes_to_tariff_id_fkey"
+            columns: ["to_tariff_id"]
+            isOneToOne: false
+            referencedRelation: "tariff"
+            referencedColumns: ["tariff_id"]
+          },
+          {
+            foreignKeyName: "tariff_changes_to_tariff_id_fkey"
+            columns: ["to_tariff_id"]
+            isOneToOne: false
+            referencedRelation: "tariff_per_group"
+            referencedColumns: ["tariff_id"]
+          },
+        ]
+      }
       users: {
         Row: {
           email: string | null
@@ -612,6 +662,26 @@ export type Database = {
           combined_names?: never
           created_at?: string | null
           transaction_date?: string | null
+        }
+        Relationships: []
+      }
+      tariff_change_view: {
+        Row: {
+          from_action_price: number | null
+          from_call_rate: number | null
+          from_data: number | null
+          from_monthly_fee: number | null
+          from_sms_rate: number | null
+          from_tariff_name: string | null
+          id: number | null
+          phone_numbers_with_from_tariff: string[] | null
+          start_date: string | null
+          to_action_price: number | null
+          to_call_rate: number | null
+          to_data: number | null
+          to_monthly_fee: number | null
+          to_sms_rate: number | null
+          to_tariff_name: string | null
         }
         Relationships: []
       }
