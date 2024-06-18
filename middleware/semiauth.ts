@@ -1,29 +1,46 @@
-import type { TablesInsert } from "~/typings/database.types";
 import CryptoJS from "crypto-js";
-export default defineNuxtRouteMiddleware(async (to, from) => {
 
-  const validGroups = ['toet', 'nepomuk']
-  if(process.client  ){
-    const encryptKey = useRuntimeConfig().public.encryptKey
-    const is_dev =  process.env.NODE_ENV === 'development'
-    const receivedCode = to.query.code
 
-    if(!receivedCode) {
-      return navigateTo({name: 'signin', query: { redirect: to.path}})
+interface DecryptedData {
+  group: string;
+  timestamp: number;
+}
+
+const validGroups = ['toet', 'nepomuk']
+
+function decryptCode(code: string, key: string) {
+  const decrypted = CryptoJS.AES.decrypt(code, key).toString(CryptoJS.enc.Utf8);
+  const [group, time] = decrypted.split(':');
+  return { group, timestamp: parseInt(time) };
+}
+
+export function isCodeValid(group: string, timestamp: number, isDev = false) {
+  const currentTime = new Date().getTime();
+  const validTime = currentTime - timestamp < (isDev ? 99999999999 : 300000);
+  const validGroup = validGroups.includes(group);
+  return validTime && validGroup;
+}
+
+
+export default defineNuxtRouteMiddleware(async (to) => {
+  if (import.meta.client) {
+    const encryptKey = useRuntimeConfig().public.encryptKey;
+    const isDev = process.env.NODE_ENV === 'development';
+    const receivedCode = to.query.code;
+
+    if (!receivedCode) {
+      return navigateTo({ name: 'signin', query: { redirect: to.path, reason: 'missing_code' } });
     }
-    let [group, time] = (CryptoJS.AES.decrypt(receivedCode, encryptKey).toString(CryptoJS.enc.Utf8) as string).split(':')
-    const timestamp = parseInt(time)
 
-    const validTime = new Date().getTime() - timestamp < (is_dev ? 99999999999 : 300000)
-    const validGroup = validGroups.includes(group)
+    try {
+      const { group, timestamp } = decryptCode(receivedCode as string, encryptKey);
 
-    if( !validTime || !validGroup ){
-      return navigateTo({name: 'signin', query: { redirect: to.path}})
+      if (!isCodeValid(group, timestamp, isDev)) {
+        return navigateTo({ name: 'signin', query: { redirect: to.path, reason: 'invalid_code' } });
+      }
+    } catch (error) {
+      return navigateTo({ name: 'signin', query: { redirect: to.path, reason: 'decrypt_error' } });
     }
-
-    // const is_dev =  process.env.NODE_ENV === 'development'
-    
   }
-
- });
+});
  

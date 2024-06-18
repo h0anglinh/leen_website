@@ -17,6 +17,9 @@ interface Props {
 	startTimeInMs: number;
 }
 
+const router = useRouter();
+const route = useRoute();
+
 const props = defineProps<Props>();
 
 interface TimeLeft {
@@ -64,6 +67,11 @@ const updateCountdown = () => {
 		minutes: Math.floor((timeLeftMS.value % (1000 * 60 * 60)) / (1000 * 60)),
 		seconds: Math.floor((timeLeftMS.value % (1000 * 60)) / 1000),
 	};
+
+	const { days, hours, minutes, seconds } = timeLeft.value;
+	if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
+		return router.push({ name: "signin", query: { redirect: route.path, reason: "time_passed" } });
+	}
 };
 
 watch(() => props.startTimeInMs, startCountdown);
