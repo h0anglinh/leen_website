@@ -1,12 +1,10 @@
 import CryptoJS from "crypto-js";
-
-
+import { validGroups } from "~/constants";
 interface DecryptedData {
   group: string;
   timestamp: number;
 }
 
-const validGroups = ['toet', 'nepomuk']
 
 function decryptCode(code: string, key: string) {
   const decrypted = CryptoJS.AES.decrypt(code, key).toString(CryptoJS.enc.Utf8);

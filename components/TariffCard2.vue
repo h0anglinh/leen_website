@@ -1,8 +1,16 @@
 <template>
 	<v-alert elevation="2">
 		<v-row>
+			<v-col cols="12">
+				<v-alert class="d-flex justify-space-between">
+					<v-chip class="my-2">Převedená telefonní čísla:</v-chip>
+					<div>
+						<v-chip class="m-1" color="info" v-for="num in item.phone_numbers_with_from_tariff"> {{ num }}</v-chip>
+					</div>
+				</v-alert>
+			</v-col>
 			<v-col>
-				<v-card>
+				<v-card variant="outlined" color="error">
 					<v-card-title class="text-blue-darken-3">
 						<div class="d-flex justify-space-between flex-column overflow-auto my-2">
 							<div class="text-h7"><v-chip color="error">Starý</v-chip> {{ item.from_tariff_name }}</div>
@@ -54,7 +62,7 @@
 										<span v-else-if="item.from_data >= 1000"> {{ item.from_data / 1000 }} GB </span>
 									</td>
 									<td v-else class="text-right">
-										<v-chip color="success"> Neomezene </v-chip>
+										<v-chip color="success"> Neomezeně </v-chip>
 									</td>
 								</tr>
 								<template v-if="item.from_call_rate === item.from_sms_rate && item.from_call_rate === 0">
@@ -85,28 +93,10 @@
 							</tbody>
 						</v-table>
 					</v-card-text>
-					<v-card-actions>
-						<v-btn color="orange-lighten-2" text="Telefonní čisla"></v-btn>
-
-						<v-spacer></v-spacer>
-
-						<v-btn :icon="show ? 'fa solid fa-chevron-up' : 'fa-solid fa-chevron-down'" @click="show = !show"></v-btn>
-					</v-card-actions>
-					<v-expand-transition>
-						<div v-show="show">
-							<v-divider></v-divider>
-
-							<v-card-text>
-								<div>
-									<v-chip size="x-small" v-for="number in item.phone_numbers_with_from_tariff"> {{ number }} </v-chip>
-								</div>
-							</v-card-text>
-						</div>
-					</v-expand-transition>
 				</v-card>
 			</v-col>
 			<v-col>
-				<v-card>
+				<v-card variant="outlined" color="info">
 					<v-card-title class="text-blue-darken-3">
 						<div class="d-flex justify-space-between flex-column overflow-auto my-2">
 							<div><v-chip color="info">Nový</v-chip> {{ item.to_tariff_name }}</div>
@@ -154,7 +144,7 @@
 										<span v-else-if="item.to_data >= 1000"> {{ item.to_data / 1000 }} GB </span>
 									</td>
 									<td v-else class="text-right">
-										<v-chip color="success"> Neomezene </v-chip>
+										<v-chip color="success"> Neomezeně </v-chip>
 									</td>
 								</tr>
 								<template v-if="item.to_call_rate === item.to_sms_rate && item.to_call_rate === 0">
@@ -195,7 +185,7 @@
 import type { Tables } from "~/typings/database.types";
 const chipSize = "small";
 const { item, group, direct } = defineProps<{
-	item: Tables<{ schema: "mobile_services" }, "tariff_change_view">;
+	item: Tables<{ schema: "mobile_services" }, "vw_tariff_change">;
 	group: Tables<{ schema: "mobile_services" }, "groups">;
 	direct: "from" | "to";
 }>();

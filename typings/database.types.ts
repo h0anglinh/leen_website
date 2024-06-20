@@ -395,6 +395,7 @@ export type Database = {
       }
       phone_numbers: {
         Row: {
+          active: boolean | null
           created_at: string | null
           data_tariff_id: number | null
           modified_at: string | null
@@ -405,6 +406,7 @@ export type Database = {
           user_id: number | null
         }
         Insert: {
+          active?: boolean | null
           created_at?: string | null
           data_tariff_id?: number | null
           modified_at?: string | null
@@ -415,6 +417,7 @@ export type Database = {
           user_id?: number | null
         }
         Update: {
+          active?: boolean | null
           created_at?: string | null
           data_tariff_id?: number | null
           modified_at?: string | null
@@ -665,26 +668,6 @@ export type Database = {
         }
         Relationships: []
       }
-      tariff_change_view: {
-        Row: {
-          from_action_price: number | null
-          from_call_rate: number | null
-          from_data: number | null
-          from_monthly_fee: number | null
-          from_sms_rate: number | null
-          from_tariff_name: string | null
-          id: number | null
-          phone_numbers_with_from_tariff: string[] | null
-          start_date: string | null
-          to_action_price: number | null
-          to_call_rate: number | null
-          to_data: number | null
-          to_monthly_fee: number | null
-          to_sms_rate: number | null
-          to_tariff_name: string | null
-        }
-        Relationships: []
-      }
       vw_invoice_items: {
         Row: {
           amount: number | null
@@ -796,6 +779,26 @@ export type Database = {
             referencedColumns: ["phone_number"]
           },
         ]
+      }
+      vw_tariff_change: {
+        Row: {
+          from_action_price: number | null
+          from_call_rate: number | null
+          from_data: number | null
+          from_monthly_fee: number | null
+          from_sms_rate: number | null
+          from_tariff_name: string | null
+          id: number | null
+          phone_numbers_with_from_tariff: string[] | null
+          start_date: string | null
+          to_action_price: number | null
+          to_call_rate: number | null
+          to_data: number | null
+          to_monthly_fee: number | null
+          to_sms_rate: number | null
+          to_tariff_name: string | null
+        }
+        Relationships: []
       }
     }
     Functions: {

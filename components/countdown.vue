@@ -17,6 +17,12 @@ interface Props {
 	startTimeInMs: number;
 }
 
+const onCountdownEnd = () => {
+	// Tato funkce se spustí na konci odpočtu
+	console.log("Countdown finished");
+	// Můžete sem přidat jakýkoli další kód, který se má spustit po skončení odpočtu
+};
+
 const router = useRouter();
 const route = useRoute();
 
@@ -35,9 +41,12 @@ const timeLeft = ref<TimeLeft>({
 	minutes: 0,
 	seconds: 0,
 });
+
+const is_dev = process.env.NODE_ENV === "development";
+const is_prod = process.env.NODE_ENV === "production";
 const endTime = ref(0);
 const timeLeftMS = ref(0);
-const endTimeMS = process.env.NODE_ENV === "development" ? 5 * 60 * 60 * 1000 : 5 * 60 * 1000; // add 5 min (prod) vs 5 hours (dev)
+const endTimeMS = is_dev ? 5 * 60 * 60 * 1000 : is_prod ? 5 * 60 * 1000 : 1000; // add 5 min (prod) vs 5 hours (dev)
 
 const startCountdown = () => {
 	endTime.value = props.startTimeInMs + endTimeMS;
@@ -58,6 +67,8 @@ const updateCountdown = () => {
 			minutes: 0,
 			seconds: 0,
 		};
+		onCountdownEnd();
+
 		return;
 	}
 
@@ -67,11 +78,6 @@ const updateCountdown = () => {
 		minutes: Math.floor((timeLeftMS.value % (1000 * 60 * 60)) / (1000 * 60)),
 		seconds: Math.floor((timeLeftMS.value % (1000 * 60)) / 1000),
 	};
-
-	const { days, hours, minutes, seconds } = timeLeft.value;
-	if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
-		return router.push({ name: "signin", query: { redirect: route.path, reason: "time_passed" } });
-	}
 };
 
 watch(() => props.startTimeInMs, startCountdown);

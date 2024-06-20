@@ -1,24 +1,32 @@
 <script setup lang="ts">
+import * as yup from "yup";
+const validationSchema = yup.object({
+	password: yup.string().required(),
+});
 import { useForm } from "vee-validate";
-import { useAuthStore } from "~/stores/useAuthStore";
+import { validGroups } from "~/constants";
 import CryptoJS from "crypto-js";
-const { defineField, handleSubmit } = useForm<{ group: string }>({});
+const { defineField, handleSubmit, meta, setErrors, errors } = useForm<{ password: string }>({ validationSchema });
 const { encryptKey } = useRuntimeConfig().public;
-const authStore = useAuthStore();
-const { users } = storeToRefs(authStore);
 const router = useRouter();
 const { redirect } = useRoute().query;
-const [name, nameAttrs] = defineField("group");
+const [name, nameAttrs] = defineField("password");
 
 const signIn = handleSubmit((val) => {
 	if (redirect && typeof redirect === "string") {
+		if (!validGroups.includes(val.password.toLowerCase())) {
+			setErrors({ password: "Neplatné heslo" });
+			return;
+		}
 		const [_, ...pages] = redirect.split("/");
 		const timestamp = new Date().getTime();
-		const code = CryptoJS.AES.encrypt(`${val.group.toLowerCase()}:${timestamp}`, encryptKey).toString();
+		const code = CryptoJS.AES.encrypt(`${val.password.toLowerCase()}:${timestamp}`, encryptKey).toString();
 		router.push({ name: pages.join("-"), query: { code } });
-
-		// router.push({name: ''})
 	}
+});
+
+useHead({
+	title: () => "SIGN IN",
 });
 </script>
 
@@ -26,12 +34,18 @@ const signIn = handleSubmit((val) => {
 	<v-container fluid>
 		<v-row justify="center" align="center" class="h-screen">
 			<v-col cols="12" sm="8" md="6" lg="4">
-				<v-card flat width="30rem">
+				<v-card flat>
 					<v-form @submit="signIn">
-						<v-card-title class="text-center"> Enter user </v-card-title>
+						<v-card-title class="text-center"> Zadej heslo </v-card-title>
 						<v-card-text>
-							<v-text-field v-model="name" v-bind="nameAttrs"></v-text-field>
-							<v-btn block type="submit">Submit</v-btn>
+							<v-text-field
+								placeholder="heslo"
+								v-model="name"
+								v-bind="nameAttrs"
+								:error-messages="errors.password"
+								:error="meta.dirty && meta.validated"
+							></v-text-field>
+							<v-btn block type="submit" :disabled="!meta.valid">Odeslat</v-btn>
 						</v-card-text>
 					</v-form>
 				</v-card>

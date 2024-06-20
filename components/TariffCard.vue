@@ -50,7 +50,7 @@
 							<span v-else-if="item.data >= 1000"> {{ item.data / 1000 }} GB </span>
 						</td>
 						<td v-else class="text-right">
-							<v-chip color="success"> Neomezene </v-chip>
+							<v-chip color="success"> Neomezeně </v-chip>
 						</td>
 					</tr>
 					<template v-if="item.call_rate === item.sms_rate && item.call_rate === 0">

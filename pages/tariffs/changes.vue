@@ -17,7 +17,7 @@ const thegroup = ref<Tables<{ schema: "mobile_services" }, "groups">>({
 	group_id: 9999,
 });
 
-const tariffs = ref<Tables<{ schema: "mobile_services" }, "tariff_change_view">[]>();
+const tariffs = ref<Tables<{ schema: "mobile_services" }, "vw_tariff_change">[]>();
 
 const encryptKey = useRuntimeConfig().public.encryptKey;
 let [user, time] = (CryptoJS.AES.decrypt(pathQuery.code || "", encryptKey).toString(CryptoJS.enc.Utf8) as string).split(":");

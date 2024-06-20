@@ -56,7 +56,7 @@ onMounted(async () => {
 					class="my-5 mx-auto"
 					width="550"
 					:title="tabItem.value !== 'o2' ? 'POZOR' : undefined"
-					:text="tabItem.value !== 'o2' ? 'Platnost tarifů do 18.6.2024' : 'Tarify budou v nabídce od 18.6.2024'"
+					:text="tabItem.value !== 'o2' ? 'Platnost tarifů do 18.6.2024' : 'Tarify v nabídce od 18.6.2024'"
 					:type="tabItem.value === 'o2' ? 'info' : 'error'"
 				>
 				</v-alert>

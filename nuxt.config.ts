@@ -53,7 +53,6 @@ export default defineNuxtConfig({
     }
   },
   vuetify: {
-    
     vuetifyOptions:  './vuetify.config.ts'
   },
   googleFonts: {
@@ -62,4 +61,7 @@ export default defineNuxtConfig({
       'DM+Mono': true
     }
   },
+ routeRules: {
+  "/": { prerender: true }
+ }
 });

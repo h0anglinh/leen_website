@@ -3,7 +3,7 @@ import { Database } from "~/typings/database.types";
 export default defineEventHandler(async (event) => {
   const client = (await serverSupabaseClient<Database>(event)).schema('mobile_services');
 
-  let instance = client.from('tariff_change_view').select("*");
+  let instance = client.from('vw_tariff_change').select("*");
 
   const { data, error } = await instance
   if(error){
