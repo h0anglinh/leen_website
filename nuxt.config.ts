@@ -19,49 +19,56 @@ const app = {
 }
 
 export default defineNuxtConfig({
-  devtools: { enabled: true },
-  app,
-  $development: {
-    app
-  },
-  $production: {
-    app
-  },
-  
-  
-  modules: [
-    "@nuxtjs/tailwindcss",
-    "@nuxtjs/device",
-    "@nuxtjs/google-fonts",
-    "@vee-validate/nuxt",
-    "@nuxtjs/supabase",
-    "vuetify-nuxt-module",
-    '@pinia/nuxt',
-  ],
-  pinia: {
-    storesDirs: ['./stores/**'],
-  },
+ devtools: { enabled: true },
+ app,
 
-  
-  supabase,
-  runtimeConfig: {
-    mode: process.env.NODE_ENV,
-    public: {
-      encryptKey: process.env.THE_SECRET,
-      toet_pass: process.env.TOET_PASSWORD,
-      nepal_pass: process.env.NEPAL_PASSWORD
-    }
-  },
-  vuetify: {
-    vuetifyOptions:  './vuetify.config.ts'
-  },
-  googleFonts: {
-    outputDir: "assets/fonts",
-    families: {
-      'DM+Mono': true
-    }
-  },
+ $development: {
+   app
+ },
+
+ $production: {
+   app
+ },
+
+ modules: [
+   "@nuxtjs/tailwindcss",
+   "@nuxtjs/device",
+   "@nuxtjs/google-fonts",
+   "@vee-validate/nuxt",
+   "@nuxtjs/supabase",
+   "vuetify-nuxt-module",
+   '@pinia/nuxt',
+ ],
+
+ pinia: {
+   storesDirs: ['./stores/**'],
+ },
+
+ supabase,
+
+ runtimeConfig: {
+   mode: process.env.NODE_ENV,
+   public: {
+     encryptKey: process.env.THE_SECRET,
+     toet_pass: process.env.TOET_PASSWORD,
+     nepal_pass: process.env.NEPAL_PASSWORD
+   }
+ },
+
+ vuetify: {
+   vuetifyOptions:  './vuetify.config.ts'
+ },
+
+ googleFonts: {
+   outputDir: "assets/fonts",
+   families: {
+     'DM+Mono': true
+   }
+ },
+
  routeRules: {
   "/": { prerender: true }
- }
+ },
+
+ compatibilityDate: '2024-08-01'
 });

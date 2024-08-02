@@ -9,8 +9,6 @@ const { redirect } = useRoute().query;
 const [email, emailAttrs] = defineField("email");
 const [password, passswordAttrs] = defineField("password");
 
-const signIn = handleSubmit(() => {});
-
 const providers: { label: string; provider: Provider }[] = [
 	{ label: "Login with Google", provider: "google" },
 	{ label: "Login with Facebook", provider: "facebook" },
